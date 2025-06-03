@@ -1,7 +1,8 @@
-// @Author: Your name
+// @Author: Matteo Cipriani
 // @Date:   02-06-2025 13:39:59
-// @Last Modified by:   Your name
-// @Last Modified time: 02-06-2025 18:06:23
+// @Last Modified by:   Matteo Cipriani
+// @Last Modified time: 03-06-2025 08:00:51
+
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![allow(rustdoc::missing_crate_level_docs)]
 
@@ -13,6 +14,7 @@ use argon2::{password_hash::SaltString, Argon2, PasswordHash, PasswordHasher, Pa
 use egui::{ColorImage, TextureOptions, Vec2};
 use rand::{rngs::OsRng, RngCore};
 use serde::{Deserialize, Serialize};
+use sha2::{Digest, Sha256};
 use std::fs;
 use std::path::PathBuf;
 
@@ -28,7 +30,6 @@ fn main() -> eframe::Result<()> {
         options,
         Box::new(|cc| {
             egui_extras::install_image_loaders(&cc.egui_ctx);
-            // Fix: Wrap the result in Ok()
             Ok(Box::new(MyApp::new()) as Box<dyn eframe::App>)
         }),
     )
@@ -52,7 +53,7 @@ struct MyApp {
     show_password_dialog: bool,
     encryption_key: Option<[u8; 32]>,
     error_message: String,
-    salt: Option<String>, // Add this field to store the salt
+    salt: Option<String>,
 }
 
 impl MyApp {
@@ -67,14 +68,14 @@ impl MyApp {
             show_password_dialog: false,
             encryption_key: None,
             error_message: String::new(),
-            salt: None, // Initialize salt as None
+            salt: None,
         };
 
         // Check if encrypted data exists
         if app.get_data_file_path().exists() {
             app.show_password_dialog = true;
         } else {
-            app.show_password_dialog = true; // Show dialog to set initial password
+            app.show_password_dialog = true;
         }
 
         app
@@ -82,7 +83,7 @@ impl MyApp {
 
     fn get_data_file_path(&self) -> PathBuf {
         let mut path = std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."));
-        path.push("encrypted_data.json");
+        path.push("app_cache.db");
         path
     }
 
@@ -128,7 +129,6 @@ impl MyApp {
         if let (Some(key), Some(salt_str)) = (&self.encryption_key, &self.salt) {
             let (encrypted_name, nonce) = self.encrypt_text(&self.name, key)?;
 
-            // Use the existing password hash (we don't need to rehash it every time)
             let salt =
                 SaltString::from_b64(salt_str).map_err(|e| format!("Invalid salt: {}", e))?;
             let argon2 = Argon2::default();
@@ -144,10 +144,40 @@ impl MyApp {
                 password_hash,
             };
 
-            let json = serde_json::to_string_pretty(&encrypted_data)
+            let json_bytes = serde_json::to_vec(&encrypted_data)
                 .map_err(|e| format!("JSON serialization failed: {}", e))?;
 
-            fs::write(self.get_data_file_path(), json)
+            let mut binary_data = Vec::new();
+
+            binary_data.extend_from_slice(b"SQLite format 3\x00");
+
+            binary_data.extend_from_slice(&[0x10, 0x00]);
+            binary_data.extend_from_slice(&[0x01, 0x01, 0x00, 0x40]);
+            binary_data.extend_from_slice(&[0x20, 0x20, 0x00, 0x20]);
+
+            let timestamp = std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_secs();
+            binary_data.extend_from_slice(&timestamp.to_le_bytes());
+
+            binary_data.resize(100, 0x00);
+
+            let mut hasher = Sha256::new();
+            hasher.update(&json_bytes);
+            let checksum = hasher.finalize();
+
+            binary_data.extend_from_slice(&(json_bytes.len() as u32).to_le_bytes());
+
+            binary_data.extend_from_slice(&checksum);
+
+            binary_data.extend_from_slice(&json_bytes);
+
+            let mut padding = vec![0u8; 50 + (timestamp % 200) as usize];
+            OsRng.fill_bytes(&mut padding);
+            binary_data.extend_from_slice(&padding);
+
+            fs::write(self.get_data_file_path(), binary_data)
                 .map_err(|e| format!("File write failed: {}", e))?;
         }
         Ok(())
@@ -159,12 +189,42 @@ impl MyApp {
             return Err("No encrypted data file found".to_string());
         }
 
-        let json = fs::read_to_string(file_path).map_err(|e| format!("File read failed: {}", e))?;
+        let binary_data = fs::read(file_path).map_err(|e| format!("File read failed: {}", e))?;
 
-        let encrypted_data: EncryptedData = serde_json::from_str(&json)
-            .map_err(|e| format!("JSON deserialization failed: {}", e))?;
+        if binary_data.len() < 16 || &binary_data[0..16] != b"SQLite format 3\x00" {
+            return Err("Invalid file format".to_string());
+        }
 
-        // Verify password
+        if binary_data.len() < 100 + 4 + 32 {
+            return Err("File too small or corrupted".to_string());
+        }
+
+        let data_len = u32::from_le_bytes([
+            binary_data[100],
+            binary_data[101],
+            binary_data[102],
+            binary_data[103],
+        ]) as usize;
+
+        let stored_checksum = &binary_data[104..136];
+
+        if binary_data.len() < 136 + data_len {
+            return Err("File corrupted: insufficient data".to_string());
+        }
+
+        let json_bytes = &binary_data[136..136 + data_len];
+
+        let mut hasher = Sha256::new();
+        hasher.update(json_bytes);
+        let calculated_checksum = hasher.finalize();
+
+        if stored_checksum != calculated_checksum.as_slice() {
+            return Err("File corrupted: checksum mismatch".to_string());
+        }
+
+        let encrypted_data: EncryptedData = serde_json::from_slice(json_bytes)
+            .map_err(|e| format!("Data deserialization failed: {}", e))?;
+
         let parsed_hash = PasswordHash::new(&encrypted_data.password_hash)
             .map_err(|e| format!("Invalid password hash: {}", e))?;
 
@@ -172,7 +232,6 @@ impl MyApp {
             .verify_password(password.as_bytes(), &parsed_hash)
             .map_err(|_| "Invalid password".to_string())?;
 
-        // Derive key and decrypt using the stored salt
         let key = Self::derive_key_from_password(password, encrypted_data.salt.as_bytes());
         let decrypted_name =
             self.decrypt_text(&encrypted_data.encrypted_name, &encrypted_data.nonce, &key)?;
@@ -180,7 +239,7 @@ impl MyApp {
         self.name = decrypted_name;
         self.password = password.to_string();
         self.encryption_key = Some(key);
-        self.salt = Some(encrypted_data.salt); // Store the salt
+        self.salt = Some(encrypted_data.salt);
         self.is_unlocked = true;
 
         Ok(())
@@ -197,9 +256,9 @@ impl MyApp {
 
         self.password = password.to_string();
         self.encryption_key = Some(key);
-        self.salt = Some(salt_str); // Store the salt
+        self.salt = Some(salt_str);
         self.is_unlocked = true;
-        self.name = "Matteo".to_string(); // Default name for new setup
+        self.name = "Matteo".to_string();
 
         Ok(())
     }
@@ -216,7 +275,6 @@ impl MyApp {
         }
     }
 
-    // Fix: Add these helper methods to avoid borrow issues
     fn try_load_data(&mut self) {
         let password = self.password_input.clone();
         match self.load_encrypted_data(&password) {
@@ -248,7 +306,6 @@ impl MyApp {
 
 impl eframe::App for MyApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        // Load Ferris image
         if self.ferris_texture.is_none() {
             let image = include_bytes!("../assets/images/ferris.png");
             let image = image::load_from_memory(image)
@@ -266,7 +323,6 @@ impl eframe::App for MyApp {
             self.ferris_texture = Some(texture);
         }
 
-        // Show password dialog if needed
         if self.show_password_dialog {
             egui::Window::new("Password Required")
                 .collapsible(false)
@@ -289,12 +345,9 @@ impl eframe::App for MyApp {
                         );
 
                         if response.lost_focus() && ui.input(|i| i.key_pressed(egui::Key::Enter)) {
-                            // Handle enter key
                             if self.get_data_file_path().exists() {
-                                // Fix: Use the helper method
                                 self.try_load_data();
                             } else {
-                                // Fix: Use the helper method
                                 self.try_set_password();
                             }
                         }
@@ -304,10 +357,8 @@ impl eframe::App for MyApp {
                         ui.horizontal(|ui| {
                             if ui.button("OK").clicked() {
                                 if self.get_data_file_path().exists() {
-                                    // Fix: Use the helper method
                                     self.try_load_data();
                                 } else {
-                                    // Fix: Use the helper method
                                     self.try_set_password();
                                 }
                             }
@@ -326,7 +377,6 @@ impl eframe::App for MyApp {
             return;
         }
 
-        // Main application UI (only shown when unlocked)
         if self.is_unlocked {
             egui::CentralPanel::default().show(ctx, |ui| {
                 ui.heading("Encrypted Text Application");
@@ -337,7 +387,6 @@ impl eframe::App for MyApp {
                         .text_edit_multiline(&mut self.name)
                         .labelled_by(name_label.id);
 
-                    // Auto-save when text changes
                     if response.changed() {
                         if let Err(e) = self.save_encrypted_data() {
                             eprintln!("Failed to save data: {}", e);
@@ -384,7 +433,6 @@ impl eframe::App for MyApp {
     }
 
     fn save(&mut self, _storage: &mut dyn eframe::Storage) {
-        // Save encrypted data when app closes
         if self.is_unlocked {
             if let Err(e) = self.save_encrypted_data() {
                 eprintln!("Failed to save data on exit: {}", e);
