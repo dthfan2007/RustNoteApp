@@ -1,7 +1,7 @@
 // @Author: Matteo Cipriani
 // @Date:   04-06-2025 10:24:58
 // @Last Modified by:   Matteo Cipriani
-// @Last Modified time: 06-06-2025 21:12:15
+// @Last Modified time: 11-06-2025 14:42:42
 use chrono::Utc;
 use chrono_tz::Europe::Zurich;
 use eframe::egui;
@@ -352,45 +352,51 @@ impl NotesApp {
                             )),
                     );
 
-                    // Add the content on top of the button using the modern approach
                     let button_rect = response.rect;
                     ui.scope(|ui| {
                         ui.set_clip_rect(button_rect);
-                        // Position the content within the button area
-                        ui.allocate_ui_at_rect(button_rect, |ui| {
-                            ui.vertical(|ui| {
-                                ui.add_space(8.0);
-                                ui.horizontal(|ui| {
+
+                        ui.allocate_new_ui(
+                            egui::UiBuilder::new()
+                                .max_rect(button_rect)
+                                .layout(egui::Layout::top_down(egui::Align::LEFT)),
+                            |ui| {
+                                ui.vertical(|ui| {
                                     ui.add_space(8.0);
-                                    ui.vertical(|ui| {
-                                        // Note title
-                                        ui.label(
-                                            egui::RichText::new(&note.title).size(14.0).color(
-                                                if is_selected {
-                                                    egui::Color32::WHITE
-                                                } else {
-                                                    egui::Color32::LIGHT_GRAY
-                                                },
-                                            ),
-                                        );
+                                    ui.horizontal(|ui| {
+                                        ui.add_space(8.0);
+                                        ui.vertical(|ui| {
+                                            // Note title
+                                            ui.label(
+                                                egui::RichText::new(&note.title).size(14.0).color(
+                                                    if is_selected {
+                                                        egui::Color32::WHITE
+                                                    } else {
+                                                        egui::Color32::LIGHT_GRAY
+                                                    },
+                                                ),
+                                            );
 
-                                        // Time information
-                                        let time_text = match self.show_time_format {
-                                            TimeFormat::Relative => note.relative_time(),
-                                            TimeFormat::Absolute => note.format_modified_time(),
-                                        };
+                                            // Time information
+                                            let time_text = match self.show_time_format {
+                                                TimeFormat::Relative => note.relative_time(),
+                                                TimeFormat::Absolute => note.format_modified_time(),
+                                            };
 
-                                        ui.label(egui::RichText::new(time_text).size(11.0).color(
-                                            if is_selected {
-                                                egui::Color32::from_rgb(200, 200, 200)
-                                            } else {
-                                                egui::Color32::GRAY
-                                            },
-                                        ));
+                                            ui.label(
+                                                egui::RichText::new(time_text).size(11.0).color(
+                                                    if is_selected {
+                                                        egui::Color32::from_rgb(200, 200, 200)
+                                                    } else {
+                                                        egui::Color32::GRAY
+                                                    },
+                                                ),
+                                            );
+                                        });
                                     });
                                 });
-                            });
-                        });
+                            },
+                        );
                     });
 
                     if response.clicked() {
