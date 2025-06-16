@@ -1,7 +1,7 @@
 // @Author: Matteo Cipriani
 // @Date:   04-06-2025 10:24:58
 // @Last Modified by:   Matteo Cipriani
-// @Last Modified time: 11-06-2025 14:42:42
+// @Last Modified time: 11-06-2025 16:16:42
 use chrono::Utc;
 use chrono_tz::Europe::Zurich;
 use eframe::egui;
@@ -219,7 +219,7 @@ impl NotesApp {
         }
     }
 
-    fn get_current_swiss_time(&self) -> String {
+    fn get_current_time(&self) -> String {
         let now = Utc::now().with_timezone(&Zurich);
         now.format("%d.%m.%Y %H:%M:%S").to_string()
     }
@@ -298,7 +298,7 @@ impl NotesApp {
                     ui.add_space(20.0);
                     ui.separator();
                     ui.small("Debug: Using standard security mode");
-                    ui.small(format!("Current time: {}", self.get_current_swiss_time()));
+                    ui.small(format!("Current time: {}", self.get_current_time()));
                 }
             });
         });
@@ -356,6 +356,7 @@ impl NotesApp {
                     ui.scope(|ui| {
                         ui.set_clip_rect(button_rect);
 
+                        // Replace `allocate_ui_at_rect` with `allocate_new_ui`
                         ui.allocate_new_ui(
                             egui::UiBuilder::new()
                                 .max_rect(button_rect)
@@ -563,7 +564,7 @@ impl NotesApp {
                     ui.heading("Select a note to edit");
                     ui.label("Or create a new note using the sidebar");
                     ui.add_space(20.0);
-                    ui.small(format!("Current time: {}", self.get_current_swiss_time()));
+                    ui.small(format!("Current time: {}", self.get_current_time()));
                 });
             }
         });
@@ -580,7 +581,7 @@ impl NotesApp {
             .as_ref()
             .and_then(|crypto| crypto.get_security_info());
 
-        let current_time = self.get_current_swiss_time();
+        let current_time = self.get_current_time();
         let has_crypto_manager = self.crypto_manager.is_some();
         let security_warnings = self.security_warnings.clone();
 
@@ -608,16 +609,24 @@ impl NotesApp {
                 }
 
                 if security_warnings.is_empty() {
-                    ui.colored_label(egui::Color32::from_rgb(0, 200, 0), "✅ No security issues detected");
+                    ui.colored_label(
+                        egui::Color32::from_rgb(0, 200, 0),
+                        "✅ No security issues detected",
+                    );
                 } else {
-                    ui.colored_label(egui::Color32::from_rgb(255, 100, 100), "⚠ Security warnings:");
+                    ui.colored_label(
+                        egui::Color32::from_rgb(255, 100, 100),
+                        "⚠ Security warnings:",
+                    );
                     for warning in &security_warnings {
-                        ui.colored_label(egui::Color32::from_rgb(255, 150, 150), format!("• {}", warning));
+                        ui.colored_label(
+                            egui::Color32::from_rgb(255, 150, 150),
+                            format!("• {}", warning),
+                        );
                     }
                 }
 
                 ui.separator();
-                ui.small("This application uses military-grade encryption with hardware binding for maximum security.");
                 ui.small(format!("Local time: {}", current_time));
             });
 
