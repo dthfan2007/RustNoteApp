@@ -22,6 +22,7 @@ header-includes: |
   \usepackage{array}
   \usepackage{xcolor}
   \usepackage{colortbl}
+  \usepackage[normalem]{ulem}
   \hypersetup{
     pdfborder={0 0 1},
     urlbordercolor={0 0 1},
@@ -62,13 +63,29 @@ output: pdf_document
 
 # Versioning
 
-| Version | Date       | Time  | Updates                                                      | Author          |
-| ------- | ---------- | ----- | ------------------------------------------------------------ | --------------- |
-| 1.0.0   | 03.06.2025 | 13:06 | Started Documentation                                        | Matteo Cipriani |
-| 1.1.0   | 03.06.2025 | 14:27 | Started Introduction                                         | Matteo Cipriani |
-| 1.2.0   | 03.06.2025 | 15:08 | Started Listing Sources                                      | Matteo Cipriani |
-| 1.3.0   | 03.06.2025 | 17:11 | Added Planned Schedule                                       | Matteo Cipriani |
-| 1.4.0   | 04.06.2025 | 10:22 | Added Decision Matrix, Dailies 1 & 2, Described egui testing | Matteo Cipriani |
+| Version | Date       | Time  | Updates                                        | Author          |
+| ------- | ---------- | ----- | ---------------------------------------------- | --------------- |
+| v0.1.0  | 03.06.2025 | 13:06 | Started Documentation                          | Matteo Cipriani |
+| v0.1.1  | 03.06.2025 | 14:27 | Started Introduction                           | Matteo Cipriani |
+| v0.1.2  | 03.06.2025 | 15:08 | Started Listing Sources                        | Matteo Cipriani |
+| v0.2.0  | 03.06.2025 | 17:11 | Revamped Components Cable to be of LaTeX-style | Matteo Cipriani |
+| v0.3.0  | 04.06.2025 | 10:22 | Added Decision Matrix                          | Matteo Cipriani |
+| v0.3.1  | 04.06.2025 | 10:24 | Added Dailies Section                          | Matteo Cipriani |
+| v0.3.2  | 04.06.2025 | 11:02 | Added Dailies 1 & 2                            | Matteo Cipriani |
+| v0.4.0  | 04.06.2025 | 11:37 | Described egui Testing                         | Matteo Cipriani |
+| v0.4.1  | 10.06.2025 | 09:34 | Added Daily 3                                  | Matteo Cipriani |
+| v0.5.0  | 10.06.2025 | 11:18 | Rough Description of Security Features         | Matteo Cipriani |
+| v0.5.1  | 10.06.2025 | 13:17 | Refactored Descriptions                        | Matteo Cipriani |
+| v0.6.0  | 10.06.2025 | 13:35 | Initialized Glossary                           | Matteo Cipriani |
+| v0.6.1  | 10.06.2025 | 14:52 | Entered First Entries into Glossary            | Matteo Cipriani |
+| v0.7.0  | 10.06.2025 | 15:22 | Began Gantt for Planned Schedule               | Matteo Cipriani |
+| v0.7.1  | 10.06.2025 | 16:40 | Changed Gantt from SVG to PNG                  | Matteo Cipriani |
+| v0.7.2  | 11.06.2025 | 09:01 | Added Daily 4                                  | Matteo Cipriani |
+| v0.7.3  | 11.06.2025 | 16:35 | Added Daily 5                                  | Matteo Cipriani |
+| v0.8.0  | 16.06.2025 | 13:51 | Redesigned Glossary                            | Matteo Cipriani |
+| v0.8.1  | 16.06.2025 | 16:24 | Added Daily 6                                  | Matteo Cipriani |
+| v0.8.2  | 17.06.2025 | 14:29 | Extended Glossary with new words               | Matteo Cipriani |
+| v0.8.3  | 17.06.2025 | 15:31 | Redesigned versioning table                    | Matteo Cipriani |
 
 \newpage
 
@@ -251,9 +268,36 @@ On the first day, I first ran my idea by Reto really quickly, just to confirm we
 
 ## Day 2: 03.06.2025
 
-Day 2 was mainly focussed on the documentation, as I knew from my last project, that it would get incredibly difficult to write a good documentation just during the last week, as you forgot a lot of things already. I didn't want to create a documentation with Word, as I had quite a few problems with it the last time I tried it, so I did some research into Markdown-Documentations enhanced with LaTeX and found out, that it is actually a viable alternative to create your documentation with. While the installation of all the things I needed (or I needed to update) took quite some time, I think that I'll get that time back by not having to wrestle with the layout on each page every time I try to insert a picture. In the afternoon, I first began by describing the project's guidelines, my project description and the risks I knew about before beginning my project. I then added the list of sources that I have already used. To finish off the day, I created a Gantt Diagram for my planned schedule and am now keeping track of when I actually worked on the tasks so I can compare to my plan at the end of the project.
+Day 2 was mainly focussed on the documentation, as I knew from my last project, that it would get incredibly difficult to write a good documentation just during the last week, as you forgot a lot of things already. I didn't want to create a documentation with Word, as I had quite a few problems with it the last time I tried it, so I did some research into Markdown-Documentations enhanced with LaTeX and found out, that it is actually a viable alternative to create your documentation with. While the installation of all the things I needed (or I needed to update) took quite some time, I think that I'll get that time back by not having to wrestle with the layout on each page every time I try to insert a picture. In the afternoon, I first began by describing the project's guidelines, my project description and the risks I knew about before beginning my project. I then added the list of sources that I have already used, which there were more of than I first thought.
 
 ## Day 3: 04.06.2025
+
+On day 3, I started implementing on implementing my basic features. I started by first designing a light-weight design for my app, with a simple GUI layout, so that the app wouldn't be hard to use. While I had setup the GUI fairly quickly, the saving / encryption process wouldn't be that fast. It took me way longer than expected to combine all my security features with each other, so that'd it actually be encrypted the way I described it in my project setup. But - after some trial and error, lots of documentation read and some help by v0, I got it to work. It now stores all data in the user's configuration directory. For windows, this would be `%APPDATA%\secure_notes\`, where it creates 3 files:
+
+- `auth.hash`, which stores the password hash for authentication
+- \sout{safety.meta} `security.meta`, which contains security metadata (hardware fingerprints, timestamps)
+
+> Changed `safety.meta` to `security.meta` for more accurate file names
+
+- `notes.enc`, which is the encrypted note data itself
+
+By implementing an encryption key which is bound to hardware characteristics like username, operating system, computer name, etc..., this creates a hardware fingerprint that makes the encrypted data only accessible on the same machine that it was encrypted on.
+
+## Day 4: 10.06.2025
+
+The fourth day was also mainly focussed on documenting. I documented a few of my security features and how they work, and created the first entries into the glossary. I also created a Gantt diagram that shows how I initially planned my project to develop, to which I will add a Gantt of how it actually developed over the days once the project is finished. The app itself did not change much this day, as I had some catching up to do with my documentation. I only changed the UI a bit and also decreased the security of the app a little bit - to a point where it still is theoretically safe for production, but the user doesn't have to wait 26 seconds every time they want to log in.
+
+## Day 5: 11.06.2025
+
+The fifth day was overshadowed by a simple, yet embarrassing error that I made. When I was re-reading my code that I wrote over the past week, I noticed that I set the filename for security metadata to `safety.meta`, which I decided to change to `security.meta`, as that was a more fitting name for me. I also noticed that I was using `allocate_ui_at_rect()` to display my notes in the statusbar on the left, which I tried to refactor to `allocate_new_ui()` as `allocate_ui_at_rect()` is now deprecated and been replaced by `allocate_new_ui()`. When I ran the project for the first time again, the login just didn't work anymore. I got an error that my password was not matching, even though I entered the correct password. It took me an embarrassing amount of time to realize that it wasn't the new `allocate_new_ui()` approach that I took that was causing the error - which wouldn't have made any sense anyways since that only gets loaded once the login has already been completed - but the name change from `safety.meta` to `security.meta` that caused the error during login, as it searched for a file that didn't even exist. This is what caused the authentication error. I thusly had to delete all the files that have been created in `%APPDATA%\secure_notes\`, so that the program would think that it's a first time setup again, so I can create a new master password.
+
+## Day 6: 16.06.2025
+
+Day 6 was shaped by some more documenting. Early in the morning, Reto reminded us that each of our repositories needed a README file, which I didn't yet create. So I had to work on that before I could do anything else. It took me a bit longer than expected because I wanted to create a clean and easy-to-read README file, that can be understood by anyone. I also added some parts where I'm not sure if I want to keep them in over longer periods of time, as they could grow to be untrue / not implemented.
+
+## Day 7: 17.06.2025
+
+Day 7 was - unfortunately - quite an unproductive day. I tried my best at implementing user logins and getting the login to persist for _x_ amount of time. However, I had some problems with storing all the user data and getting the right one to decrypt their password, and with showing them the right notes, that I had to call that mission off quite quickly. I then looked back at my documentation, and added some more words to my glossary. I then also went over my GitHub Roadmap again, for which I marked off the issues that I have now completed.
 
 \newpage
 
