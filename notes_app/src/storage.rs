@@ -1,9 +1,9 @@
 // @Author: Matteo Cipriani
 // @Date:   04-06-2025 10:29:39
 // @Last Modified by:   Matteo Cipriani
-// @Last Modified time: 18-06-2025 09:27:36
-
-use crate::{CryptoManager, Note};
+// @Last Modified time: 20-06-2025 08:10:41
+use crate::crypto::CryptoManager;
+use crate::note::Note;
 use anyhow::Result;
 use serde_json;
 use std::collections::HashMap;

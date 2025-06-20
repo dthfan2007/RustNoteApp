@@ -1,8 +1,7 @@
 // @Author: Matteo Cipriani
 // @Date:   04-06-2025 10:29:20
 // @Last Modified by:   Matteo Cipriani
-// @Last Modified time: 18-06-2025 09:33:09
-
+// @Last Modified time: 20-06-2025 08:09:51
 use anyhow::{anyhow, Result};
 use argon2::{password_hash::SaltString, Argon2, PasswordHash, PasswordHasher, PasswordVerifier};
 use chacha20poly1305::{
