@@ -1,7 +1,8 @@
 // @Author: Matteo Cipriani
 // @Date:   04-06-2025 10:29:20
 // @Last Modified by:   Matteo Cipriani
-// @Last Modified time: 04-06-2025 17:07:35
+// @Last Modified time: 18-06-2025 09:33:09
+
 use anyhow::{anyhow, Result};
 use argon2::{password_hash::SaltString, Argon2, PasswordHash, PasswordHasher, PasswordVerifier};
 use chacha20poly1305::{
@@ -47,15 +48,24 @@ impl CryptoManager {
         }
     }
 
-    pub fn initialize(&mut self, password: &str) -> Result<()> {
-        println!("Starting crypto initialization...");
+    pub fn initialize_for_user(&mut self, user_id: &str, password: &str) -> Result<()> {
+        println!("Starting crypto initialization for user: {}", user_id);
         let start_time = std::time::Instant::now();
 
-        let key_file = self.config_path.join("auth.hash");
-        let metadata_file = self.config_path.join("security.meta");
+        // Create user-specific config directory
+        let mut user_config_path = self.config_path.clone();
+        user_config_path.push("users");
+        user_config_path.push(user_id);
+
+        if !user_config_path.exists() {
+            fs::create_dir_all(&user_config_path)?;
+        }
+
+        let key_file = user_config_path.join("auth.hash");
+        let metadata_file = user_config_path.join("security.meta");
 
         let key = if key_file.exists() && metadata_file.exists() {
-            println!("Loading existing configuration...");
+            println!("Loading existing user configuration...");
 
             // Load existing setup
             let stored_hash = fs::read_to_string(&key_file)?;
@@ -154,7 +164,7 @@ impl CryptoManager {
             // Use standard security key derivation
             self.derive_secure_key(password)
         } else {
-            println!("First time setup...");
+            println!("First time setup for user...");
 
             let current_time = std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
@@ -401,5 +411,57 @@ impl CryptoManager {
                 components_str
             )
         })
+    }
+
+    pub fn change_password(
+        &mut self,
+        old_password: &str,
+        new_password: &str,
+        user_id: &str,
+    ) -> Result<()> {
+        // Verify old password first
+        let user_config_path = self.config_path.join("users").join(user_id);
+        let key_file = user_config_path.join("auth.hash");
+
+        if !key_file.exists() {
+            return Err(anyhow!("User configuration not found"));
+        }
+
+        let stored_hash = fs::read_to_string(&key_file)?;
+        let parsed_hash = PasswordHash::new(&stored_hash)
+            .map_err(|e| anyhow!("Failed to parse password hash: {}", e))?;
+
+        // Verify old password
+        Argon2::default()
+            .verify_password(old_password.as_bytes(), &parsed_hash)
+            .map_err(|_| anyhow!("Current password is incorrect"))?;
+
+        // Generate new password hash
+        let verification_salt = SaltString::generate(&mut OsRng);
+        let argon2 = Argon2::default();
+        let new_password_hash = argon2
+            .hash_password(new_password.as_bytes(), &verification_salt)
+            .map_err(|e| anyhow!("Failed to hash new password: {}", e))?;
+
+        // Save new password hash
+        fs::write(&key_file, new_password_hash.to_string())?;
+        self.secure_file_permissions(&key_file)?;
+
+        // Re-initialize with new password
+        self.initialize_for_user(user_id, new_password)?;
+
+        println!("Password changed successfully for user {}", user_id);
+        Ok(())
+    }
+
+    pub fn delete_user_crypto_data(&self, user_id: &str) -> Result<()> {
+        let user_config_path = self.config_path.join("users").join(user_id);
+
+        if user_config_path.exists() {
+            fs::remove_dir_all(&user_config_path)?;
+            println!("Deleted crypto data for user {}", user_id);
+        }
+
+        Ok(())
     }
 }

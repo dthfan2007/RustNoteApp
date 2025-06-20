@@ -21,6 +21,7 @@ This project is an individual final project for the ZLI BLJ, demonstrating advan
     - [Installation](#installation)
     - [Building for Distribution](#building-for-distribution)
   - [📖 Usage](#-usage)
+          - [Built with ❤️ and 🦀](#built-with-️-and-)
 
 ## Folder Structure
 
@@ -130,4 +131,4 @@ cargo wix
 
 ---
 
-*Built with ❤️ and 🦀*
+###### Built with ❤️ and 🦀

@@ -1,7 +1,7 @@
 // @Author: Matteo Cipriani
 // @Date:   04-06-2025 10:29:30
 // @Last Modified by:   Matteo Cipriani
-// @Last Modified time: 04-06-2025 15:32:38
+// @Last Modified time: 18-06-2025 09:00:23
 use chrono::{DateTime, Utc};
 use chrono_tz::Europe::Zurich;
 use serde::{Deserialize, Serialize};
