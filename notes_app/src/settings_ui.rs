@@ -1,7 +1,7 @@
 // @Author: Matteo Cipriani
 // @Date:   20-06-2025 08:00:00
 // @Last Modified by:   Matteo Cipriani
-// @Last Modified time: 20-06-2025 08:09:09
+// @Last Modified time: 20-06-2025 16:40:45
 
 use crate::app::NotesApp;
 use eframe::egui;

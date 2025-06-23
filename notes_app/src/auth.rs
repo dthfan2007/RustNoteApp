@@ -1,7 +1,7 @@
 // @Author: Matteo Cipriani
 // @Date:   20-06-2025 08:00:00
 // @Last Modified by:   Matteo Cipriani
-// @Last Modified time: 20-06-2025 08:32:32
+// @Last Modified time: 20-06-2025 16:40:34
 
 use crate::app::NotesApp;
 use crate::crypto::CryptoManager;
@@ -23,7 +23,7 @@ impl NotesApp {
     pub fn render_auth_dialog(&mut self, ctx: &egui::Context) {
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.vertical_centered(|ui| {
-                ui.add_space(150.0);
+                ui.add_space(75.0);
                 ui.heading("Secure Notes");
                 ui.add_space(20.0);
 
