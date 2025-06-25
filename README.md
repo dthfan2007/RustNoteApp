@@ -191,7 +191,7 @@ The application implements hardware fingerprinting for enhanced security:
 
 ### Prerequisites
 
-- **Rust**: Version 1.70+ (latest stable recommended)
+- **[Rust](https://rustup.rs/)**: Version 1.70+ (latest stable recommended)
 - **Operating System**: Windows 10+, macOS 10.14+, or modern Linux
 - **Memory**: 512MB RAM minimum
 - **Storage**: 50MB free space
@@ -200,7 +200,7 @@ The application implements hardware fingerprinting for enhanced security:
 
 ```shellscript
 # Clone the repository
-git clone https://github.com/yourusername/RustNoteApp
+git clone https://github.com/dthfan2007/RustNoteApp
 cd RustNoteApp/notes_app
 
 # Build and run in development mode
@@ -240,6 +240,7 @@ cargo bundle --release
 
 - **[User Guide](USAGE.md)** - Comprehensive user manual and feature guide
 - **[Technical Documentation](docs/documentation.pdf)** - Detailed technical specifications
+- **[Extended Documentation](https://dthfan2007.github.io/RustNoteApp/)** - `mdbook` documentation with extra snippet explanations
 
 ## 🔧 Development
 
