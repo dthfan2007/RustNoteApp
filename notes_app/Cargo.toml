@@ -17,3 +17,5 @@ chrono = { version = "0.4", features = ["serde"] }
 chrono-tz = "0.10"
 anyhow = "1.0"
 tokio = { version = "1.0", features = ["rt", "sync"] }
+rfd = "0.14"
+image = "0.24"

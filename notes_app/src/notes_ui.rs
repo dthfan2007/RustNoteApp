@@ -1,7 +1,7 @@
 // @Author: Matteo Cipriani
 // @Date:   20-06-2025 08:00:00
 // @Last Modified by:   Matteo Cipriani
-// @Last Modified time: 20-06-2025 16:40:54
+// @Last Modified time: 24-06-2025 16:35:19
 
 use crate::app::{NotesApp, TimeFormat};
 use eframe::egui;
@@ -30,12 +30,12 @@ impl NotesApp {
 
             // Action buttons at the top
             ui.horizontal(|ui| {
-                if ui.button("📝 New Note").clicked() {
+                if ui.button("New Note").on_hover_text("Ctrl + N").clicked() {
                     self.show_new_note_dialog = true;
                     self.new_note_title.clear();
                 }
 
-                if ui.button("⚙️ Settings").clicked() {
+                if ui.button("Settings").clicked() {
                     self.show_user_settings = true;
                 }
             });
@@ -45,8 +45,10 @@ impl NotesApp {
             // Time format toggle
             ui.horizontal(|ui| {
                 ui.label("Time format:");
-                ui.selectable_value(&mut self.show_time_format, TimeFormat::Relative, "Relative");
-                ui.selectable_value(&mut self.show_time_format, TimeFormat::Absolute, "Absolute");
+                ui.selectable_value(&mut self.show_time_format, TimeFormat::Relative, "Relative")
+                    .on_hover_text("Ctrl + R");
+                ui.selectable_value(&mut self.show_time_format, TimeFormat::Absolute, "Absolute")
+                    .on_hover_text("Ctrl + Alt + A");
             });
 
             ui.separator();
@@ -165,7 +167,7 @@ impl NotesApp {
             ui.separator();
 
             // Security button and warnings at the bottom
-            if ui.button("🔒 Security Info").clicked() {
+            if ui.button("Security Info").clicked() {
                 self.show_security_panel = !self.show_security_panel;
             }
 
@@ -206,24 +208,36 @@ impl NotesApp {
 
         let mut close_menu = false;
         let mut delete_note_id = None;
+        let mut export_note_id = None;
 
-        egui::Area::new("context_menu".into()) // Fix: Add .into() to convert &str to Id
+        egui::Area::new("context_menu".into())
             .fixed_pos(self.context_menu_pos)
             .order(egui::Order::Foreground)
             .show(ctx, |ui| {
                 egui::Frame::popup(ui.style()).show(ui, |ui| {
-                    ui.set_min_width(120.0);
+                    ui.set_min_width(150.0);
 
                     if let Some(ref note_id) = self.context_menu_note_id {
                         if let Some(note) = self.notes.get(note_id) {
                             ui.label(format!("Note: {}", note.title));
                             ui.separator();
                         }
-                    }
 
-                    if ui.button("Delete Note").clicked() {
-                        delete_note_id = self.context_menu_note_id.clone();
-                        close_menu = true;
+                        // Export option
+                        if ui.button("Export to file").clicked() {
+                            export_note_id = Some(note_id.clone());
+                            close_menu = true;
+                        }
+
+                        ui.separator();
+
+                        // Delete option
+                        if ui.button("Delete Note").clicked() {
+                            delete_note_id = Some(note_id.clone());
+                            close_menu = true;
+                        }
+
+                        ui.separator();
                     }
 
                     if ui.button("Cancel").clicked() {
@@ -233,6 +247,10 @@ impl NotesApp {
             });
 
         // Handle actions
+        if let Some(note_id) = export_note_id {
+            self.export_note_to_file(&note_id);
+        }
+
         if let Some(note_id) = delete_note_id {
             self.delete_note(&note_id);
         }
@@ -251,6 +269,15 @@ impl NotesApp {
 
     pub fn render_main_content(&mut self, ctx: &egui::Context) {
         egui::CentralPanel::default().show(ctx, |ui| {
+            // Show status message at the top if present
+            if let Some(ref message) = self.status_message {
+                ui.horizontal(|ui| {
+                    ui.colored_label(egui::Color32::from_rgb(100, 200, 100), "ℹ");
+                    ui.label(message);
+                });
+                ui.separator();
+            }
+
             // Clone the selected note ID to avoid borrowing issues
             if let Some(note_id) = self.selected_note_id.clone() {
                 // Get the note data we need for display (immutable borrow)
@@ -266,10 +293,21 @@ impl NotesApp {
                     }
                 };
 
-                // Display the header with note info
+                // Display the header with note info and export button
                 ui.horizontal(|ui| {
                     ui.heading(&note_title);
                     ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
+                        // Export button
+                        if ui
+                            .button("Export (Ctrl + E)")
+                            .on_hover_text("Export note to .txt file")
+                            .clicked()
+                        {
+                            self.export_note_to_file(&note_id);
+                        }
+
+                        ui.separator();
+
                         // Show both created and modified times
                         ui.vertical(|ui| {
                             ui.small(format!("Modified: {}", note_modified_time));
@@ -435,7 +473,7 @@ impl NotesApp {
                 ui.separator();
                 ui.heading("Security Audit");
 
-                if has_crypto_manager && ui.button("🔍 Run Security Audit").clicked() {
+                if has_crypto_manager && ui.button("Run Security Audit").clicked() {
                     run_audit = true;
                 }
 

@@ -1,7 +1,7 @@
 // @Author: Matteo Cipriani
 // @Date:   20-06-2025 08:00:00
 // @Last Modified by:   Matteo Cipriani
-// @Last Modified time: 20-06-2025 08:08:31
+// @Last Modified time: 24-06-2025 11:37:55
 
 use crate::auth::{AuthMode, AuthResult};
 use crate::crypto::CryptoManager;
@@ -65,6 +65,9 @@ pub struct NotesApp {
     pub new_password_input: String,
     pub confirm_new_password_input: String,
     pub delete_confirmation_input: String,
+
+    pub status_message: Option<String>,
+    pub status_message_time: Option<std::time::Instant>,
 }
 
 impl NotesApp {
@@ -110,6 +113,9 @@ impl NotesApp {
             new_password_input: String::new(),
             confirm_new_password_input: String::new(),
             delete_confirmation_input: String::new(),
+
+            status_message: None,
+            status_message_time: None,
         }
     }
 
@@ -373,12 +379,154 @@ impl NotesApp {
             }
         }
     }
+
+    pub fn export_note_to_file(&self, note_id: &str) {
+        if let Some(note) = self.notes.get(note_id) {
+            // Create default filename from note title
+            let safe_title = note
+                .title
+                .chars()
+                .map(|c| {
+                    if c.is_alphanumeric() || c == ' ' || c == '-' || c == '_' {
+                        c
+                    } else {
+                        '_'
+                    }
+                })
+                .collect::<String>()
+                .trim()
+                .to_string();
+
+            let default_filename = if safe_title.is_empty() {
+                "Untitled_Note.txt".to_string()
+            } else {
+                format!("{}.txt", safe_title)
+            };
+
+            // Show save dialog
+            if let Some(path) = rfd::FileDialog::new()
+                .set_title("Export Note")
+                .set_file_name(&default_filename)
+                .add_filter("Text files", &["txt"])
+                .add_filter("All files", &["*"])
+                .save_file()
+            {
+                match self.write_note_to_file(note, &path) {
+                    Ok(_) => {
+                        println!("Note '{}' exported successfully to: {:?}", note.title, path);
+                    }
+                    Err(e) => {
+                        eprintln!("Failed to export note '{}': {}", note.title, e);
+                    }
+                }
+            }
+        }
+    }
+
+    fn write_note_to_file(
+        &self,
+        note: &Note,
+        path: &std::path::Path,
+    ) -> Result<(), std::io::Error> {
+        use std::io::Write;
+
+        let mut file = std::fs::File::create(path)?;
+
+        // Write note with metadata header
+        writeln!(file, "Title: {}", note.title)?;
+        writeln!(file, "Created: {}", note.format_created_time())?;
+        writeln!(file, "Modified: {}", note.format_modified_time())?;
+        writeln!(file, "ID: {}", note.id)?;
+        writeln!(file, "{}", "=".repeat(50))?;
+        writeln!(file)?;
+        write!(file, "{}", note.content)?;
+
+        Ok(())
+    }
 }
 
 impl eframe::App for NotesApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         // Check for authentication results
         self.check_authentication_result();
+
+        if self.is_authenticated {
+            ctx.input(|i| {
+                // Ctrl+N for new note
+                if i.modifiers.ctrl && i.key_pressed(egui::Key::N) {
+                    self.show_new_note_dialog = true;
+                    self.new_note_title.clear();
+                }
+
+                // Ctrl+S for manual save
+                if i.modifiers.ctrl && i.key_pressed(egui::Key::S) {
+                    self.save_notes();
+                    self.status_message = Some("Note saved!".to_string());
+                }
+
+                // Escape to close dialogs
+                if i.key_pressed(egui::Key::Escape) {
+                    if self.show_new_note_dialog {
+                        self.show_new_note_dialog = false;
+                        self.new_note_title.clear();
+                    }
+                    if self.show_security_panel {
+                        self.show_security_panel = false;
+                    }
+                    if self.show_user_settings {
+                        self.show_user_settings = false;
+                    }
+                }
+
+                // Ctrl+T for switching between modes
+                if i.modifiers.ctrl && i.key_pressed(egui::Key::T) {
+                    self.show_time_format = match self.show_time_format {
+                        TimeFormat::Relative => {
+                            self.status_message =
+                                Some("Time format: Absolute (15.12.2024 14:30)".to_string());
+                            TimeFormat::Absolute
+                        }
+                        TimeFormat::Absolute => {
+                            self.status_message =
+                                Some("Time format: Relative (2 hours ago)".to_string());
+                            TimeFormat::Relative
+                        }
+                    };
+                    self.status_message_time = Some(std::time::Instant::now());
+                }
+
+                // Ctrl+R for Relative time format
+                if i.modifiers.ctrl && i.key_pressed(egui::Key::R) {
+                    self.show_time_format = TimeFormat::Relative;
+                    self.status_message =
+                        Some("Time format: Relative (X [minutes | hours | days] ago)".to_string());
+                    self.status_message_time = Some(std::time::Instant::now());
+                }
+
+                // Ctrl+Alt+A for Absolute time format
+                if i.modifiers.ctrl && i.modifiers.alt && i.key_pressed(egui::Key::A) {
+                    self.show_time_format = TimeFormat::Absolute;
+                    self.status_message =
+                        Some("Time format: Absolute (dd.mm.YYYY hh:mm)".to_string());
+                    self.status_message_time = Some(std::time::Instant::now());
+                }
+
+                // Ctrl+E to export note
+                if i.modifiers.ctrl && i.key_pressed(egui::Key::E) {
+                    if let Some(ref note_id) = self.selected_note_id {
+                        self.export_note_to_file(note_id);
+                    }
+                }
+            });
+
+            // Clear status message after 3 seconds
+            if let Some(message_time) = self.status_message_time {
+                if message_time.elapsed() > std::time::Duration::from_secs(3) {
+                    self.status_message = None;
+                    self.status_message_time = None;
+                }
+            }
+        }
 
         if self.show_auth_dialog {
             self.render_auth_dialog(ctx);

@@ -50,6 +50,7 @@ header-includes: |
       {\large\bfseries Name:} Matteo Luciano Siro Cipriani\\[1em]
       {\large\bfseries Submission Date:} \today\\[1em]
       {\large\bfseries Company:} Soreco AG\\[3em]
+      {\large\bfseries Version:} v0.12.0\\[1em]
     \end{center}
     \vspace*{\fill}
     \newpage
@@ -63,34 +64,38 @@ output: pdf_document
 
 # Versioning
 
-| Version | Date       | Time  | Updates                                                              | Author          |
-| ------- | ---------- | ----- | -------------------------------------------------------------------- | --------------- |
-| v0.1.0  | 03.06.2025 | 13:06 | Started Documentation                                                | Matteo Cipriani |
-| v0.1.1  | 03.06.2025 | 14:27 | Started Introduction                                                 | Matteo Cipriani |
-| v0.1.2  | 03.06.2025 | 15:08 | Started Listing Sources                                              | Matteo Cipriani |
-| v0.2.0  | 03.06.2025 | 17:11 | Revamped Components Cable to be of LaTeX-style                       | Matteo Cipriani |
-| v0.3.0  | 04.06.2025 | 10:22 | Added Decision Matrix                                                | Matteo Cipriani |
-| v0.3.1  | 04.06.2025 | 10:24 | Added Dailies Section                                                | Matteo Cipriani |
-| v0.3.2  | 04.06.2025 | 11:02 | Added Dailies 1 & 2                                                  | Matteo Cipriani |
-| v0.4.0  | 04.06.2025 | 11:37 | Described egui Testing                                               | Matteo Cipriani |
-| v0.4.1  | 10.06.2025 | 09:34 | Added Daily 3                                                        | Matteo Cipriani |
-| v0.5.0  | 10.06.2025 | 11:18 | Rough Description of Security Features                               | Matteo Cipriani |
-| v0.5.1  | 10.06.2025 | 13:17 | Refactored Descriptions                                              | Matteo Cipriani |
-| v0.6.0  | 10.06.2025 | 13:35 | Initialized Glossary                                                 | Matteo Cipriani |
-| v0.6.1  | 10.06.2025 | 14:52 | Entered First Entries into Glossary                                  | Matteo Cipriani |
-| v0.7.0  | 10.06.2025 | 15:22 | Began Gantt for Planned Schedule                                     | Matteo Cipriani |
-| v0.7.1  | 10.06.2025 | 16:40 | Changed Gantt from SVG to PNG                                        | Matteo Cipriani |
-| v0.7.2  | 11.06.2025 | 09:01 | Added Daily 4                                                        | Matteo Cipriani |
-| v0.7.3  | 11.06.2025 | 16:35 | Added Daily 5                                                        | Matteo Cipriani |
-| v0.8.0  | 16.06.2025 | 13:51 | Redesigned Glossary                                                  | Matteo Cipriani |
-| v0.8.1  | 16.06.2025 | 16:24 | Added Daily 6                                                        | Matteo Cipriani |
-| v0.8.2  | 17.06.2025 | 14:29 | Extended Glossary with new words                                     | Matteo Cipriani |
-| v0.8.3  | 17.06.2025 | 15:31 | Redesigned versioning table                                          | Matteo Cipriani |
-| v0.8.4  | 18.06.2025 | 08:12 | Added Daily 7                                                        | Matteo Cipriani |
-| v0.8.5  | 18.06.2025 | 17:46 | Added Daily 8                                                        | Matteo Cipriani |
-| v0.8.6  | 20.06.2025 | 17:27 | Added Daily 9                                                        | Matteo Cipriani |
-| v0.9.0  | 23.06.2025 | 15:18 | Added extensive description of encryption process                    | Matteo Cipriani |
-| v0.10.0 | 23.06.2025 | 17:03 | Added Function Descriptions (incl. cross-reference to code snippets) | Matteo Cipriani |
+| Version | Date       | Time  | Updates                                           | Author          |
+| ------- | ---------- | ----- | ------------------------------------------------- | --------------- |
+| v0.1.0  | 03.06.2025 | 13:06 | Started Documentation                             | Matteo Cipriani |
+| v0.1.1  | 03.06.2025 | 14:27 | Started Introduction                              | Matteo Cipriani |
+| v0.1.2  | 03.06.2025 | 15:08 | Started Listing Sources                           | Matteo Cipriani |
+| v0.2.0  | 03.06.2025 | 17:11 | Revamped Components Cable to be of LaTeX-style    | Matteo Cipriani |
+| v0.3.0  | 04.06.2025 | 10:22 | Added Decision Matrix                             | Matteo Cipriani |
+| v0.3.1  | 04.06.2025 | 10:24 | Added Dailies Section                             | Matteo Cipriani |
+| v0.3.2  | 04.06.2025 | 11:02 | Added Dailies 1 & 2                               | Matteo Cipriani |
+| v0.4.0  | 04.06.2025 | 11:37 | Described egui Testing                            | Matteo Cipriani |
+| v0.4.1  | 10.06.2025 | 09:34 | Added Daily 3                                     | Matteo Cipriani |
+| v0.5.0  | 10.06.2025 | 11:18 | Rough Description of Security Features            | Matteo Cipriani |
+| v0.5.1  | 10.06.2025 | 13:17 | Refactored Descriptions                           | Matteo Cipriani |
+| v0.6.0  | 10.06.2025 | 13:35 | Initialized Glossary                              | Matteo Cipriani |
+| v0.6.1  | 10.06.2025 | 14:52 | Entered First Entries into Glossary               | Matteo Cipriani |
+| v0.7.0  | 10.06.2025 | 15:22 | Began Gantt for Planned Schedule                  | Matteo Cipriani |
+| v0.7.1  | 10.06.2025 | 16:40 | Changed Gantt from SVG to PNG                     | Matteo Cipriani |
+| v0.7.2  | 11.06.2025 | 09:01 | Added Daily 4                                     | Matteo Cipriani |
+| v0.7.3  | 11.06.2025 | 16:35 | Added Daily 5                                     | Matteo Cipriani |
+| v0.8.0  | 16.06.2025 | 13:51 | Redesigned Glossary                               | Matteo Cipriani |
+| v0.8.1  | 16.06.2025 | 16:24 | Added Daily 6                                     | Matteo Cipriani |
+| v0.8.2  | 17.06.2025 | 14:29 | Extended Glossary with new words                  | Matteo Cipriani |
+| v0.8.3  | 17.06.2025 | 15:31 | Redesigned versioning table                       | Matteo Cipriani |
+| v0.8.4  | 18.06.2025 | 08:12 | Added Daily 7                                     | Matteo Cipriani |
+| v0.8.5  | 18.06.2025 | 17:46 | Added Daily 8                                     | Matteo Cipriani |
+| v0.8.6  | 20.06.2025 | 17:27 | Added Daily 9                                     | Matteo Cipriani |
+| v0.9.0  | 23.06.2025 | 15:18 | Added extensive description of encryption process | Matteo Cipriani |
+| v0.10.0 | 23.06.2025 | 17:03 | Added Function Descriptions                       | Matteo Cipriani |
+| v0.10.1 | 24.06.2025 | 15:36 | Added Daily 10                                    | Matteo Cipriani |
+| v0.11.0 | 24.06.2025 | 16:55 | Updated Glossary                                  | Matteo Cipriani |
+| v0.11.1 | 24.06.2025 | 17:13 | Added Daily 11                                    | Matteo Cipriani |
+| v0.12.0 | 25.06.2025 | 09:18 | Added Test Protocol                               | Matteo Cipriani |
 
 \newpage
 
@@ -115,6 +120,10 @@ I know that creating an application purely in Rust might be difficult, especiall
 ## Schedule
 
 ![Schedule (Planned)](./assets/images/gantt_planned.png)
+
+![Schedule (Actual)](./assets/images/gantt_actual.png)
+
+\newpage
 
 ## Decision Matrix
 
@@ -170,6 +179,8 @@ Use context menus from your GUI framework. Consider soft deletion (marking as de
 Store an encrypted token in the system keyring or in a hidden file in the app directory. Use \texttt{directories-next} to find appropriate locations. \\
 
 \end{longtable}
+
+\newpage
 
 ### Finalization & Polish Components (MS 3)
 
@@ -255,7 +266,7 @@ During my experiments with `egui` and other crates that I'd use later in the pro
 
 In the actual project, the encryption process looks a little more like this:
 
-#### 1. Hardware Fingerprinting
+#### Hardware Fingerprinting
 
 The system creates a stable hardware fingerprint using:
 
@@ -269,7 +280,7 @@ components.push(format!("arch:{}", env::consts::ARCH));  // Architecture
 components.push(format!("computer:{}", computer_name));  // Computer name
 ```
 
-#### 2. Password-Based Key Derivation (Argon2id)
+#### Password-Based Key Derivation (Argon2id)
 
 ```rust
 // Production-grade Argon2 parameters
@@ -282,7 +293,9 @@ let params = argon2::Params::new(memory_cost, iterations, parallelism, Some(32))
 let argon2 = Argon2::new(argon2::Algorithm::Argon2id, argon2::Version::V0x13, params);
 ```
 
-#### 3. Hardware-Bound Salt Generation
+\newpage
+
+#### Hardware-Bound Salt Generation
 
 ```rust
 fn generate_hardware_salt(&self) -> [u8; 32] {
@@ -299,14 +312,14 @@ fn generate_hardware_salt(&self) -> [u8; 32] {
 
 #### Encryption Implementation
 
-##### 1. Cipher: ChaCha20Poly1305 AEAD
+##### Cipher: ChaCha20Poly1305 AEAD
 
 - **Algorithm**: ChaCha20 stream cipher + Poly1305 MAC
 - **Key Size**: 256 bits (32 bytes)
 - **Nonce Size**: 96 bits (12 bytes)
 - **Authentication**: Built-in message authentication
 
-##### 2. Encryption Process
+##### Encryption Process
 
 ```rust
 pub fn encrypt(&self, data: &[u8]) -> Result<Vec<u8>> {
@@ -326,7 +339,7 @@ pub fn encrypt(&self, data: &[u8]) -> Result<Vec<u8>> {
 }
 ```
 
-##### 3. Decryption Process
+##### Decryption Process
 
 ```rust
 pub fn decrypt(&self, data: &[u8]) -> Result<Vec<u8>> {
@@ -344,19 +357,21 @@ pub fn decrypt(&self, data: &[u8]) -> Result<Vec<u8>> {
 }
 ```
 
+\newpage
+
 #### Data Flow \
+
+\
 
 ![Authentication & Key Initialization Process](./assets/images/auth.png)
 
 ![Note Storage Process](./assets/images/storage.png)
 
-![Note Retrieval Process](./assets/images/retrieval.png)\
-
-\newpage
+![Note Retrieval Process](./assets/images/retrieval.png)
 
 #### Security Features
 
-##### 1. Hardware Binding
+##### Hardware Binding
 
 ```rust
 // Security check on each login
@@ -368,7 +383,7 @@ if metadata.hardware_fingerprint_hash != current_hash {
 }
 ```
 
-##### 2. Security Metadata
+##### Security Metadata
 
 ```rust
 struct SecurityMetadata {
@@ -379,7 +394,7 @@ struct SecurityMetadata {
 }
 ```
 
-##### 3. File Security
+##### File Security
 
 ```rust
 #[cfg(unix)]
@@ -390,7 +405,7 @@ fn secure_file_permissions(&self, file_path: &Path) -> Result<()> {
 }
 ```
 
-##### 4. User Isolation
+##### User Isolation
 
 ```plaintext
 ~/.config/secure_notes/
@@ -432,6 +447,8 @@ nonce_size: 12,        // 96-bit nonce (never reused)
 auth_tag_size: 16,     // 128-bit authentication tag
 ```
 
+\newpage
+
 #### Critical Security Checks
 
 ##### Hardware Change Detection
@@ -452,6 +469,8 @@ fn is_critical_hardware_change(&self, stored: &[String], current: &[String]) -> 
 ```
 
 This encryption system provides **military-grade security** while maintaining usability through automatic key management and hardware binding, ensuring that encrypted notes remain secure even if the application files are compromised.
+
+\newpage
 
 ## Function Descriptions
 
@@ -484,6 +503,8 @@ The function essentially creates a "vault" that's locked with both the user's pa
   - **UI Responsiveness:** Keeps the UI thread free while expensive crypto operations run in background.
 
 The registration flow is particularly complex as it requires three sequential operations, each of which can fail independently.
+
+\newpage
 
 ### `CryptoManager::encrypt()` & `decrypt()`
 
@@ -573,6 +594,8 @@ Argon2 is specifically designed to be memory-hard and resistant to both GPU and 
 
 This function is called every UI frame, making it the bridge between the background authentication thread and the main application state.
 
+\newpage
+
 ### `Note::relative_time()`
 
 - **Reference:** Code Snippet No. 12
@@ -586,7 +609,7 @@ This function is called every UI frame, making it the bridge between the backgro
   - **Fallback to Absolute:** For very old notes (>4 weeks), shows actual date instead of "X weeks ago".
   - **User Experience:** Makes it easy to quickly understand when notes were last modified.
 
-This kind of relative time display is crucial for user experience - it's much easier to understand "2 hours ago" than "2024-06-23 14:30:15".
+This kind of relative time display is crucial for user experience - it's much easier to understand "2 hours ago" than "2025-06-23 14:30:15".
 
 ### `Note::new()`
 
@@ -615,6 +638,8 @@ The UUID ensures that even if two users create notes simultaneously, there will 
   - **State Management:** Updates both the notes collection and the UI selection state.
 
 The function ensures that users can never create a note without a title, preventing UI confusion.
+
+\newpage
 
 ### `NotesApp::auto_save_if_needed()`
 
@@ -660,6 +685,8 @@ This fingerprint prevents someone from copying encrypted files to another machin
 
 This ensures that users upgrading from single-user to multi-user versions don't lose their existing notes.
 
+\newpage
+
 ### `NotesApp::render_auth_dialog()`
 
 - **Reference:** Code Snippet No. 18
@@ -677,9 +704,286 @@ This ensures that users upgrading from single-user to multi-user versions don't 
 
 The function handles the complex state transitions between idle, validating, authenticating, and error states while maintaining a clean user experience.
 
-## Test plan
+\newpage
 
-Tests etc
+# Testing
+
+## Application Components
+
+The application consists of:
+
+- **Authentication System** - User login/registration
+- **Encryption Engine** - Data protection
+- **Storage Layer** - File management
+- **User Interface** - Note editing and management
+- **Note Management** - Create, edit, delete notes
+
+## Testing Strategy
+
+### Unit Testing
+
+#### Authentication Testing (`auth.rs`, `user.rs`) \
+
+**Test Cases:**
+
+```plaintext
+- User registration with valid/invalid data
+- Password verification (correct/incorrect)
+- User login authentication
+- Password change functionality
+- Account deletion
+```
+
+#### Encryption Testing (`crypto.rs`) \
+
+**Test Cases:**
+
+```plaintext
+- Data encryption produces different outputs
+- Decryption recovers original data exactly
+- Hardware fingerprint generation
+- Key derivation with different passwords
+- Security audit detection
+```
+
+#### Storage Testing (`storage.rs`) \
+
+**Test Cases:**
+
+```plaintext
+- Save/load encrypted notes
+- User data isolation
+- File permission security
+- Data deletion completeness
+```
+
+#### Note Management Testing (`note.rs`) \
+
+**Test Cases:**
+
+```plaintext
+- Note creation and modification
+- Timestamp updates
+- Time formatting (relative/absolute)
+- Timezone conversion accuracy
+```
+
+\newpage
+
+### Integration Testing
+
+#### User Registration Flow \
+
+**Test Steps:**
+
+```plaintext
+1. Launch application
+2. Select "Register" mode
+3. Enter username and password
+4. Verify user creation
+5. Confirm automatic login
+6. Check empty notes state
+```
+
+#### Login Authentication Flow \
+
+**Test Steps:**
+
+```plaintext
+1. Launch with existing user
+2. Enter credentials
+3. Verify authentication success
+4. Check notes loading
+5. Validate hardware fingerprint
+```
+
+#### Note Lifecycle Testing \
+
+**Test Steps:**
+
+```plaintext
+1. Create new note
+2. Add/edit content
+3. Verify auto-save
+4. Logout and login
+5. Confirm note persistence
+6. Export note to file
+```
+
+### Security Testing
+
+#### Data Protection \
+
+**Test Cases:**
+
+```plaintext
+- Users cannot access other users' notes
+- Encrypted files are unreadable without key
+- Hardware changes trigger security warnings
+- Password changes invalidate old passwords
+```
+
+#### Authentication Security \
+
+**Test Cases:**
+
+```plaintext
+- Wrong passwords are rejected
+- Account lockout after failed attempts
+- Secure password requirements enforced
+- Session management works correctly
+```
+
+\newpage
+
+### User Interface Testing
+
+#### Main UI Functions \
+
+**Manual Test Cases:**
+
+```plaintext
+- Note creation and editing
+- Context menu operations (right-click)
+- Settings dialog functionality
+- Time format switching
+- Note export feature
+```
+
+#### Keyboard Shortcuts \
+
+**Test Cases:**
+
+```plaintext
+- Ctrl+N: New note
+- Ctrl+S: Save note
+- Ctrl+E: Export note
+- Ctrl+T: Toggle time format
+- Escape: Close dialogs
+```
+
+### Error Handling Testing
+
+#### Common Error Scenarios \
+
+**Test Cases:**
+
+```plaintext
+- Disk full during save
+- Corrupted data files
+- Invalid user credentials
+- Missing configuration files
+- Hardware fingerprint changes
+```
+
+### Performance Testing
+
+#### Key Metrics \
+
+**Test Areas:**
+
+```plaintext
+- Authentication time (target: 5-10 seconds)
+- Note loading speed
+- Large note handling (>100KB)
+- UI responsiveness during operations
+```
+
+### Test Execution
+
+#### Automated Testing \
+
+**Schedule:**
+
+```plaintext
+- Unit tests: Every commit
+- Integration tests: Daily
+- Security tests: Weekly
+```
+
+#### Manual Testing \
+
+**Before Each Release:**
+
+```plaintext
+- Complete user workflow testing
+- Security validation
+- UI functionality check
+```
+
+### Test Checklist
+
+#### Core Functionality \
+
+**Must Pass:**
+
+```plaintext
+- [x] User registration works
+- [x] User login/logout works
+- [x] Notes can be created and edited
+- [x] Notes persist across sessions
+- [x] Users cannot see other users' notes
+- [x] Password change works
+- [x] Note export works
+- [x] All keyboard shortcuts work
+```
+
+#### Security Requirements \
+
+**Must Pass:**
+
+```plaintext
+- [x] Data files are encrypted
+- [x] Wrong passwords are rejected
+- [x] Hardware fingerprint validation works
+- [x] User data is isolated
+- [x] Account deletion removes all data
+```
+
+### Test Environment
+
+#### Setup Requirements \
+
+**Tools Needed:**
+
+```plaintext
+- Rust toolchain for unit tests
+- Multiple test user accounts
+- Various note sizes for testing
+- Clean state reset procedures
+```
+
+### Risk Priorities
+
+#### High Priority (Must Test) \
+
+```plaintext
+- User authentication
+- Data encryption/decryption
+- User data isolation
+- Password security
+```
+
+#### Medium Priority \
+
+```plaintext
+- Note management operations
+- UI functionality
+- Error handling
+- Performance
+```
+
+#### Low Priority \
+
+```plaintext
+- Time formatting
+- UI cosmetics
+- Optional shortcuts
+```
+
+## Conclusion
+
+This testing strategy focuses on the most critical aspects: security, data integrity, and core functionality. Regular execution of these tests ensures the application maintains user trust and operates reliably across all supported platforms.plaintext
 
 \newpage
 
@@ -706,6 +1010,8 @@ On day 3, I started implementing on implementing my basic features. I started by
 
 By implementing an encryption key which is bound to hardware characteristics like username, operating system, computer name, etc..., this creates a hardware fingerprint that makes the encrypted data only accessible on the same machine that it was encrypted on.
 
+\newpage
+
 ## Day 4: 10.06.2025
 
 The fourth day was also mainly focussed on documenting. I documented a few of my security features and how they work, and created the first entries into the glossary. I also created a Gantt diagram that shows how I initially planned my project to develop, to which I will add a Gantt of how it actually developed over the days once the project is finished. The app itself did not change much this day, as I had some catching up to do with my documentation. I only changed the UI a bit and also decreased the security of the app a little bit - to a point where it still is theoretically safe for production, but the user doesn't have to wait 26 seconds every time they want to log in.
@@ -726,9 +1032,19 @@ Day 7 was - unfortunately - quite an unproductive day. I tried my best at implem
 
 On the eighth day I was working from home. I was able to implement User Login / Registration after dealing with it for some time. Then I had to fix a problem where _all_ notes would be shown to every user once they've logged in. I fixed it by modifying how notes are stored. Now every user has their own folder with the 3 files in it. This means that the size of the storage goes up slightly, but it was the only way that came to mind fairly quickly. Deleting a note is now also stored in a context menu that pops up on right click, and not just always available as a button.
 
+\newpage
+
 ## Day 9: 20.06.2025
 
 Day 9 was an additional day that I got to work on my project on, as school got cancelled. I redesigned a few things in the app, although you can't really see that much of it because it is mainly just minor adjustments in the layout. I want to add a few different color schemes at some point, but I don't know how hard that might be to implement. I also split my code even further, as my `main.rs` file got pretty long. Now I use 9 files instead of the old 3. Weirdly enough, the decision on _how_ to split the files itself was more complicated than the splitting of the files itself.
+
+## Day 10: 23.06.2025
+
+Day 10 was another day that was mostly spent on the documentation. I read through my `crypto.rs` file again, as that contains a fair amount of code that I just don't understand fully. After reading through the entire file and trying to understand all of the code by various means, I tried my best at documenting the whole process more in-depth than it has been so far. For the remainder of the afternoon, I documented my most important functions and added their code snippets to my appendix. This process took quite some time, as I had to look at every function again to decide which ones I want to document and which ones I will leave out.
+
+## Day 11: 24.06.2025
+
+Day 11 was a really productive day, as the feeling of "I don't know if I'm really going to be able to finish everything" has started to kick in. I worked on implementing Keyboard Shortcuts, which took surprisingly little time. After that, I worked on exporting the files to `.txt` format, which turned out to be a little more annoying than I expected, not because it was difficult to implement, but because it just didn't work for 30 minutes, and then suddenly - without changing _anything_, it just worked. In the afternoon I updated my glossary and added terms, which I have used in this documentation and I feel like they could need some further explanation.
 
 \newpage
 
@@ -757,8 +1073,36 @@ Day 9 was an additional day that I got to work on my project on, as school got c
 - [The Cargo Book](https://doc.rust-lang.org/cargo/guide/)
   - Guide through Rust's package manager
   - Easy point to access Features, Commands and general infos about cargo
+- [Vercel v0](https://v0.dev)
+  - Good AI to refactor code to be more efficient
+  - Solves errors good when provided with the right info
+- [ChatGPT](https://chat.openai.com)
+  - Research about various crates
+  - Easy to find websites referencing thing you're looking for
 
 ## Glossary
+
+\addtocontents{toc}{\protect\setcounter{tocdepth}{1}}
+
+### AEAD (Authenticated Encryption with Associated Data)
+
+A cryptographic scheme that provides both confidentiality and authenticity. ChaCha20Poly1305 is an AEAD cipher that encrypts data while also providing authentication to detect tampering.
+
+### Argon2id
+
+A memory-hard password hashing function and winner of the Password Hashing Competition. It's designed to be resistant to both GPU and ASIC attacks by requiring significant memory usage.
+
+### ASIC (Application-Specific Integrated Circuit)
+
+Specialized hardware designed for specific tasks. In cryptography, ASICs can be used to accelerate password cracking, which is why Argon2 is designed to be ASIC-resistant.
+
+### Authentication Tag
+
+A cryptographic value that verifies the integrity and authenticity of encrypted data. In ChaCha20Poly1305, this is a 128-bit tag that detects any tampering with the ciphertext.
+
+### ChaCha20Poly1305
+
+A modern authenticated encryption algorithm combining the ChaCha20 stream cipher with the Poly1305 message authentication code. It's faster than AES on systems without hardware AES acceleration.
 
 ### Checksum
 
@@ -772,6 +1116,14 @@ Stands for Continuous Integration and Continuous Deployment/Delivery. In the con
 
 The encrypted form of data that cannot be read without decryption. In the app, notes are converted to ciphertext using an encryption key before being stored on disk.
 
+### Deterministic
+
+A process that always produces the same output given the same input. Used in hardware fingerprinting to ensure consistent results across application runs.
+
+### Hardware Fingerprinting
+
+A technique that creates a unique identifier based on hardware and system characteristics. Used to bind encrypted data to specific machines for additional security.
+
 ### Hash
 
 A deterministic output of a hash function, producing a fixed-size value from arbitrary input. Hashes are used for verifying integrity, storing passwords securely, and comparing data without revealing the original input.
@@ -784,29 +1136,85 @@ A cryptographic process that generates a strong encryption key from a password o
 
 Describes a program or library with minimal resource usage (e.g., memory, CPU). A lightweight secure notes app in Rust would be fast, efficient, and suitable for low-power or embedded environments.
 
+### MAC (Message Authentication Code)
+
+A cryptographic checksum that verifies both the integrity and authenticity of a message. Poly1305 is the MAC component in ChaCha20Poly1305.
+
+### Memory-hard
+
+A cryptographic property where the algorithm requires significant memory to execute, making it expensive to attack with specialized hardware. Argon2 is memory-hard.
+
+### Metadata
+
+Data that provides information about other data. In the app, this includes timestamps, hardware fingerprints, and encryption version information.
+
 ### Nonce
 
 A "number used once" in cryptography to ensure that encryption results are unique each time. Used in encryption schemes like AES-GCM to prevent replay attacks and ensure data security.
+
+### Obfuscation
+
+The practice of making data or code difficult to understand or analyze. The app uses fake SQLite headers to disguise encrypted files.
+
+### Parallelism
+
+The ability to perform multiple operations simultaneously. Argon2 can use multiple CPU threads to increase security while maintaining reasonable performance.
 
 ### Password Hashing
 
 The process of converting a password into a fixed-size string (hash) using a cryptographic hash function. In a secure notes app, this is used to securely store and verify user passwords without keeping them in plain text.
 
+### PBKDF2 (Password-Based Key Derivation Function 2)
+
+An older key derivation function that applies a hash function multiple times to derive keys from passwords. Less secure than Argon2 against modern attacks.
+
+### Poly1305
+
+A cryptographic message authentication code (MAC) designed by Daniel J. Bernstein. It's used with ChaCha20 to provide authenticated encryption.
+
+### Replay Attack
+
+A security attack where valid data transmission is maliciously repeated. Nonces prevent replay attacks by ensuring each encryption is unique.
+
 ### Salt
 
 A random value added to passwords before hashing to ensure unique hashes for identical passwords. This prevents precomputed hash attacks (e.g., rainbow tables).
+
+### Semantic Security
+
+A cryptographic property where identical plaintexts produce different ciphertexts when encrypted multiple times. Achieved through random nonces.
 
 ### Serialization
 
 The process of converting data structures (e.g., Rust structs) into a format that can be stored or transmitted, such as JSON, TOML, or binary. Used in the app to save and load notes securely.
 
+### Stream Cipher
+
+A type of encryption that encrypts data one bit or byte at a time. ChaCha20 is a stream cipher that's faster than block ciphers like AES in software.
+
 ### System Keyring
 
 A secure storage mechanism provided by the operating system for storing secrets such as passwords or keys. The secure notes app can optionally use the system keyring to store encryption keys safely.
 
+### Thread Safety
+
+The property of code that can be safely executed by multiple threads simultaneously without data corruption. The app uses message passing for thread safety.
+
+### Timing Attack
+
+A security attack that analyzes the time taken to execute cryptographic operations to extract secret information. Argon2 is designed to be resistant to timing attacks.
+
+### UUID (Universally Unique Identifier)
+
+A 128-bit identifier that's unique across space and time. The app uses UUID v4 for note IDs to prevent conflicts between users.
+
+\addtocontents{toc}{\protect\setcounter{tocdepth}{3}}
+
 \newpage
 
 ## Code Snippets
+
+### Snippet 1: Initiating `eframe`
 
 ```rust
 fn main() -> Result<(), eframe::Error> {
@@ -827,11 +1235,9 @@ fn main() -> Result<(), eframe::Error> {
 }
 ```
 
-\begin{center}
-\textit{Snippet 1: Initiating `eframe`}
-\end{center}
-
 \
+
+### Snippet 2: First tests with variables
 
 ```rust
 egui::CentralPanel::default().show(ctx, |ui| {
@@ -856,11 +1262,9 @@ egui::CentralPanel::default().show(ctx, |ui| {
     ));
 ```
 
-\begin{center}
-\textit{Snippet 2: First tests with variables}
-\end{center}
-
 \newpage
+
+### Snippet 3: First playtesting with functions
 
 ```rust
 struct MyApp {
@@ -904,11 +1308,9 @@ egui::CentralPanel::default().show(ctx, |ui| {
 })
 ```
 
-\begin{center}
-\textit{Snippet 3: First playtesting with functions}
-\end{center}
-
 \newpage
+
+### Snippet 4: Create User Locked Vault
 
 ```rust
 pub fn initialize_for_user(&mut self, user_id: &str, password: &str) -> Result<()> {
@@ -1070,11 +1472,9 @@ pub fn initialize_for_user(&mut self, user_id: &str, password: &str) -> Result<(
 }
 ```
 
-\begin{center}
-\textit{Snippet 4: Create User Locked Vault}
-\end{center}
-
 \newpage
+
+### Snippet 5: Authenticating the user
 
 ```rust
 pub fn start_authentication(
@@ -1172,11 +1572,9 @@ pub fn start_authentication(
 }
 ```
 
-\begin{center}
-\textit{Snippet 5: Authenticating the user}
-\end{center}
-
 \newpage
+
+### Snippet 6: Encrypting & Decrypting the Notes
 
 ```rust
 pub fn encrypt(&self, data: &[u8]) -> Result<Vec<u8>> {
@@ -1214,11 +1612,9 @@ pub fn decrypt(&self, data: &[u8]) -> Result<Vec<u8>> {
 }
 ```
 
-\begin{center}
-\textit{Snippet 6: Encrypting \& Decrypting the Notes}
-\end{center}
-
 \newpage
+
+### Snippet 7: Save \& Load User Notes
 
 ```rust
 pub fn save_user_notes(
@@ -1275,11 +1671,9 @@ pub fn load_user_notes(
 }
 ```
 
-\begin{center}
-\textit{Snippet 7: Save \& Load User Notes}
-\end{center}
-
 \newpage
+
+### Snippet 8: Create New Users
 
 ```rust
 pub fn create_user(&mut self, username: String, password: &str) -> Result<()> {
@@ -1334,11 +1728,9 @@ pub fn create_user(&mut self, username: String, password: &str) -> Result<()> {
 }
 ```
 
-\begin{center}
-\textit{Snippet 8: Create New Users}
-\end{center}
-
 \newpage
+
+### Snippet 9: Authenticate username & password
 
 ```rust
 pub fn authenticate(&self, username: &str, password: &str) -> Result<User> {
@@ -1356,11 +1748,9 @@ pub fn authenticate(&self, username: &str, password: &str) -> Result<User> {
 }
 ```
 
-\begin{center}
-\textit{Snippet 9: Authenticate username \& password}
-\end{center}
-
 \
+
+### Snippet 10: Cryptographically safe password verification
 
 ```rust
 pub fn verify_password(&self, password: &str) -> Result<bool> {
@@ -1374,11 +1764,9 @@ pub fn verify_password(&self, password: &str) -> Result<bool> {
 }
 ```
 
-\begin{center}
-\textit{Snippet 10: Cryptographically safe password verification}
-\end{center}
-
 \newpage
+
+### Snippet 11: Asynchronous authentication with the UI thread
 
 ```rust
 pub fn check_authentication_result(&mut self) {
@@ -1435,11 +1823,9 @@ pub fn check_authentication_result(&mut self) {
 }
 ```
 
-\begin{center}
-\textit{Snippet 11: Asynchronous authentication with the UI thread}
-\end{center}
-
 \newpage
+
+### Snippet 12: Display relative time
 
 ```rust
 pub fn relative_time(&self) -> String {
@@ -1484,11 +1870,9 @@ pub fn relative_time(&self) -> String {
 }
 ```
 
-\begin{center}
-\textit{Snippet 12: Display relative time}
-\end{center}
-
 \newpage
+
+### Snippet 13: Create new Notes
 
 ```rust
 pub fn new(title: String) -> Self {
@@ -1503,11 +1887,9 @@ pub fn new(title: String) -> Self {
 }
 ```
 
-\begin{center}
-\textit{Snippet 13: Create new Notes}
-\end{center}
-
 \
+
+### Snippet 14: Note creation with user experience considerations
 
 ```rust
 pub fn create_new_note(&mut self, title: String) {
@@ -1525,11 +1907,9 @@ pub fn create_new_note(&mut self, title: String) {
 }
 ```
 
-\begin{center}
-\textit{Snippet 14: Note creation with user experience considerations}
-\end{center}
-
 \
+
+### Snippet 15: Auto-save every 2 seconds
 
 ```rust
 pub fn auto_save_if_needed(&mut self) {
@@ -1540,11 +1920,9 @@ pub fn auto_save_if_needed(&mut self) {
 }
 ```
 
-\begin{center}
-\textit{Snippet 15: Auto-save every 2 seconds}
-\end{center}
-
 \newpage
+
+### Snippet 16: Generate Hardware Fingerprint
 
 ```rust
 fn generate_stable_hardware_fingerprint(&self) -> Result<(u64, Vec<String>)> {
@@ -1593,11 +1971,9 @@ fn generate_stable_hardware_fingerprint(&self) -> Result<(u64, Vec<String>)> {
 }
 ```
 
-\begin{center}
-\textit{Snippet 16: Generate Hardware Fingerprint}
-\end{center}
-
 \newpage
+
+### Snippet 17: Migrate old files (if available)
 
 ```rust
 pub fn migrate_legacy_data_if_needed(&self, user_id: &str, crypto: &CryptoManager) -> Result<()> {
@@ -1629,11 +2005,9 @@ pub fn migrate_legacy_data_if_needed(&self, user_id: &str, crypto: &CryptoManage
 }
 ```
 
-\begin{center}
-\textit{Snippet 17: Migrate old files (if available)}
-\end{center}
-
 \newpage
+
+### Snippet 18: Render Authentication GUI
 
 ```rust
 pub fn render_auth_dialog(&mut self, ctx: &egui::Context) {
@@ -1816,9 +2190,3 @@ pub fn render_auth_dialog(&mut self, ctx: &egui::Context) {
     });
 }
 ```
-
-\begin{center}
-\textit{Snippet 18: Render Authentication GUI}
-\end{center}
-
-\
