@@ -1,0 +1,5 @@
+[book]
+authors = ["dthfan2007"]
+language = "en"
+src = "src"
+title = "Rust Notes App"
