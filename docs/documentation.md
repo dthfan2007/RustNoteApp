@@ -50,7 +50,7 @@ header-includes: |
       {\large\bfseries Name:} Matteo Luciano Siro Cipriani\\[1em]
       {\large\bfseries Submission Date:} \today\\[1em]
       {\large\bfseries Company:} Soreco AG\\[3em]
-      {\large\bfseries Version:} v0.12.0\\[1em]
+      {\large\bfseries Version:} v1.0.0\\[1em]
     \end{center}
     \vspace*{\fill}
     \newpage
@@ -96,6 +96,9 @@ output: pdf_document
 | v0.11.0 | 24.06.2025 | 16:55 | Updated Glossary                                  | Matteo Cipriani |
 | v0.11.1 | 24.06.2025 | 17:13 | Added Daily 11                                    | Matteo Cipriani |
 | v0.12.0 | 25.06.2025 | 09:18 | Added Test Protocol                               | Matteo Cipriani |
+| v0.13.0 | 25.06.2025 | 17:24 | Added Images from Results                         | Matteo Cipriani |
+| v0.13.1 | 25.06.2025 | 17:39 | Added Daily 12                                    | Matteo Cipriani |
+| v1.0.0  | 25.06.2025 | 17:40 | Finished Documentation                            | Matteo Cipriani |
 
 \newpage
 
@@ -1046,6 +1049,16 @@ Day 10 was another day that was mostly spent on the documentation. I read throug
 
 Day 11 was a really productive day, as the feeling of "I don't know if I'm really going to be able to finish everything" has started to kick in. I worked on implementing Keyboard Shortcuts, which took surprisingly little time. After that, I worked on exporting the files to `.txt` format, which turned out to be a little more annoying than I expected, not because it was difficult to implement, but because it just didn't work for 30 minutes, and then suddenly - without changing _anything_, it just worked. In the afternoon I updated my glossary and added terms, which I have used in this documentation and I feel like they could need some further explanation.
 
+## Day 12: 25.06.2025
+
+The final day turned out to be more stressful than I would've liked for it to be. Firstly, I added an icon to my app, as it was the last thing missing. Then, I worked on creating an additional `mdbook` documentation for my project, as it is an easy way to create a documentation in the form of a website while only having to write Markdown. This way, I had a website that I could link to GitHub Pages. In that version, I decided to explain the functions themselves a little more in-depth, which was time consuming, but it helped me to refresh my knowledge of the functions. In the afternoon, I had to create my presentation from scratch, and started by looking for a template. Once I found a fittingly themed presentation, I quickly got to work on it. Although it turned out rather short, I think that I can talk about it for the 10 - 15 minutes I need. In the end, I cleaned up my documentation for the very last time, before I submitted everything.
+
+\newpage
+
+# Summary
+
+Overall, I think that this project was a great way to see a different way to develop apps. Being able to compare it to the project I did earlier this year (ToDo-App using Flutter) helped me see the up- / downsides of both ways of developing an app. Even though Flutter is made for Mobile Development, I think that the little bit of knowledge I gained from it did help me in some parts in this project. However, this project turned out to be way more difficult than I first imagined. Having to deal with Rust's very strict type safety did turn out to be a little annoying sometimes. However, those "annoying" things are some of the reasons why Rust is such a fast language. Working on this project has been both incredibly rewarding and frustratingly complex - it's one of those projects where you think you understand what you're getting into until you're knee-deep in the intricacies of cryptographic key derivation and suddenly realize that making something truly secure is exponentially harder than making something that just works. The highs came from those breakthrough moments when the encryption finally clicked into place and seeing notes seamlessly save and load with military-grade security, or when the hardware fingerprinting system elegantly detected that someone moved the app to a different machine - there's something deeply satisfying about building something that actually protects user data rather than just pretending to. But the lows were brutal: spending days debugging why Argon2 was taking 30 seconds on some machines while being lightning fast on others, wrestling with Rust's borrow checker when trying to manage complex UI state in egui, and the soul-crushing realization that backward compatibility meant rewriting the entire storage system to support multiple users when the original design assumed a single user. The authentication flow alone went through probably six different iterations because threading cryptographic operations in a GUI application is like trying to juggle while riding a unicycle - every time you think you've got it stable, something else breaks. The project taught me that security isn't just about using the right algorithms - it's about getting a thousand tiny details right, from file permissions to error messages to making sure the UI doesn't freeze during key derivation, and honestly, by the end I had a much deeper appreciation for why so many applications get security wrong because doing it right is exhausting, but also why it's worth the effort when you see users actually trusting your application with their private thoughts.
+
 \newpage
 
 # Appendix
@@ -1079,6 +1092,9 @@ Day 11 was a really productive day, as the feeling of "I don't know if I'm reall
 - [ChatGPT](https://chat.openai.com)
   - Research about various crates
   - Easy to find websites referencing thing you're looking for
+- [mdBook](https://rust-lang.github.io/mdBook/)
+  - mdBook Documentation
+  - Great for documenting your Rust projects
 
 ## Glossary
 
@@ -1213,6 +1229,8 @@ A 128-bit identifier that's unique across space and time. The app uses UUID v4 f
 \newpage
 
 ## Code Snippets
+
+> For more extensive descriptions of the Code Snippets, visit my [`mdbook` Documentation](https://dthfan2007.github.io/RustNoteApp/)
 
 ### Snippet 1: Initiating `eframe`
 
@@ -2190,3 +2208,13 @@ pub fn render_auth_dialog(&mut self, ctx: &egui::Context) {
     });
 }
 ```
+
+\newpage
+
+## Images
+
+![Final Registering Screen](./assets/images/register.png)
+
+\
+
+![Final Main App Screen](./assets/images/home.png)

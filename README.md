@@ -325,19 +325,21 @@ This project is developed as an academic assignment for ZLI BLJ. Please respect 
 
 ## 🎯 Project Goals Achieved
 
-✅ **Advanced Rust Programming** - Demonstrates complex Rust concepts and patterns
-✅ **GUI Development** - Native desktop application with modern interface
-✅ **Cryptography Implementation** - Military-grade encryption and security
-✅ **Multi-User Architecture** - Complete user isolation and management
-✅ **Cross-Platform Compatibility** - Works on Windows, macOS, and Linux
-✅ **Professional Documentation** - Comprehensive user and technical documentation
-✅ **Security Best Practices** - Hardware binding and advanced security features
-✅ **Performance Optimization** - Efficient handling of large datasets
+- ✅ **Advanced Rust Programming** - Demonstrates complex Rust concepts and patterns
+- ✅ **GUI Development** - Native desktop application with modern interface
+- ✅ **Cryptography Implementation** - Military-grade encryption and security
+- ✅ **Multi-User Architecture** - Complete user isolation and management
+- ✅ **Cross-Platform Compatibility** - Works on Windows, macOS, and Linux
+- ✅ **Professional Documentation** - Comprehensive user and technical documentation
+- ✅ **Security Best Practices** - Hardware binding and advanced security features
+- ✅ **Performance Optimization** - Efficient handling of large datasets
 
 ---
 
 *Built with ❤️ and 🦀 Rust*
 
 **Author**: Matteo Cipriani
+
 **Company**: Soreco AG
+
 **Year**: 2025
