@@ -1,0 +1,13 @@
+graph LR
+    A[User Login] --> B[Password Verification]
+    B --> C[Hardware Fingerprint Check]
+    C --> D[Argon2 Key Derivation]
+    D --> E[ChaCha20Poly1305 Cipher Init]
+    E --> F[Ready for Encryption/Decryption]
+
+    style A fill:#e1f5fe
+    style B fill:#fff3e0
+    style C fill:#fff3e0
+    style D fill:#ffebee
+    style E fill:#f3e5f5
+    style F fill:#e8f5e8
