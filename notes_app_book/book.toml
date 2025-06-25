@@ -3,3 +3,6 @@ authors = ["dthfan2007"]
 language = "en"
 src = "src"
 title = "Rust Notes App"
+
+[output.html]
+base-url = "/notes_app_book/book/"
