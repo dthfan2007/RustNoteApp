@@ -20,8 +20,6 @@ This project is an individual final project for the ZLI BLJ, demonstrating advan
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
     - [Building for Distribution](#building-for-distribution)
-  - [📖 Usage](#-usage)
-          - [Built with ❤️ and 🦀](#built-with-️-and-)
 
 ## Folder Structure
 
@@ -59,14 +57,11 @@ RustNoteApp/
 
 ### Advanced Features
 
-- 🎨 **Modern UI** - Polished interface with theming support
+- 🎨 **Modern UI** - Clean minimalistic interface
 - ⏰ **Timestamps** - Track creation and modification times
-- 🔤 **Sorting Options** - Sort notes by date, title, or custom criteria
 - 📤 **Export Functionality** - Export notes to plain text
-- ⚙️ **Settings Management** - Configurable app preferences
 - ⌨️ **Keyboard Shortcuts** - Efficient navigation and actions
 - 📦 **Windows Packaging** - Standalone executable with installer
-- 🔄 **Session Persistence** - Remember authentication state securely
 
 ## 🛡️ Security Features
 
@@ -83,8 +78,7 @@ RustNoteApp/
 1. **Key Derivation**: Random 16-byte salt + Argon2id → 32-byte key
 2. **Encryption**: AES-256-GCM with random 12-byte nonce
 3. **Metadata**: Bundle salt, hash, nonce, and ciphertext
-4. **Obfuscation**: Add fake SQLite header and random padding
-5. **Integrity**: SHA-256 checksum for verification
+4. **Integrity**: SHA-256 checksum for verification
 
 ### Tech Stack
 
@@ -122,13 +116,6 @@ cargo install cargo-wix
 cargo wix
 ```
 
-## 📖 Usage
-
-1. **First Launch**: Set up your master password
-2. **Creating Notes**: Click "New Note"
-3. **Editing**: Click any note to edit
-4. **Security**: Notes are automatically encrypted when saved
-
 ---
 
-###### Built with ❤️ and 🦀
+_Built with ❤️ and 🦀_
