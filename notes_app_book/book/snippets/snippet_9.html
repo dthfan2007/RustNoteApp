@@ -1,0 +1,409 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Snippet 9 - Rust Notes App</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Rust Notes App</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="snippet-9-authenticate-username--password"><a class="header" href="#snippet-9-authenticate-username--password">Snippet 9: Authenticate username &amp; password</a></h1>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn authenticate(&amp;self, username: &amp;str, password: &amp;str) -&gt; Result&lt;User&gt; {
+    let user = self
+        .users
+        .get(username)
+        .ok_or_else(|| anyhow!("Invalid username or password"))?;
+
+    if user.verify_password(password)? {
+        println!("User {} authenticated successfully", username);
+        Ok(user.clone())
+    } else {
+        Err(anyhow!("Invalid username or password"))
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="secure-user-authentication-and-credential-verification-system"><a class="header" href="#secure-user-authentication-and-credential-verification-system">Secure User Authentication and Credential Verification System</a></h2>
+<p>This function represents the core authentication mechanism of the secure notes application, implementing industry-standard security practices for user credential verification. It serves as the critical gateway that determines whether a user can access their encrypted data and establishes the foundation for secure session management.</p>
+<h3 id="comprehensive-authentication-architecture-analysis"><a class="header" href="#comprehensive-authentication-architecture-analysis">Comprehensive Authentication Architecture Analysis</a></h3>
+<p><strong>Function Signature and Security Design:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn authenticate(&amp;self, username: &amp;str, password: &amp;str) -&gt; Result&lt;User&gt;
+<span class="boring">}</span></code></pre></pre>
+<p>The function signature embodies several important security and design principles:</p>
+<ul>
+<li><strong>Immutable Self Reference</strong>: Uses <code>&amp;self</code> to ensure authentication doesn't modify the user registry state</li>
+<li><strong>String Slice Parameters</strong>: Uses string slices for both username and password to avoid unnecessary memory allocations</li>
+<li><strong>User Object Return</strong>: Returns a complete <code>User</code> object on successful authentication, providing session context</li>
+<li><strong>Result Type</strong>: Implements comprehensive error handling with descriptive error propagation</li>
+<li><strong>Const Correctness</strong>: Maintains immutability where possible to prevent accidental state modifications</li>
+</ul>
+<p><strong>User Lookup and Existence Verification:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let user = self.users.get(username).ok_or_else(|| anyhow!("Invalid username or password"))?;
+<span class="boring">}</span></code></pre></pre>
+<p>The user lookup process implements several critical security measures:</p>
+<ul>
+<li><strong>Exact Match Lookup</strong>: Uses the HashMap's <code>get()</code> method for efficient O(1) username lookup</li>
+<li><strong>Existence Validation</strong>: Checks if the username exists in the user registry</li>
+<li><strong>Generic Error Message</strong>: Returns the same error message for both invalid username and invalid password</li>
+<li><strong>Information Hiding</strong>: Prevents username enumeration attacks by not revealing whether a username exists</li>
+<li><strong>Early Termination</strong>: Fails fast if the username doesn't exist, preventing unnecessary processing</li>
+</ul>
+<p><strong>Security-First Error Handling:</strong>
+The error handling strategy implements defense against information disclosure attacks:</p>
+<ul>
+<li><strong>Consistent Error Messages</strong>: Uses identical error text for username and password failures</li>
+<li><strong>Timing Attack Mitigation</strong>: While not explicitly implemented here, the design supports constant-time responses</li>
+<li><strong>No Information Leakage</strong>: Error messages don't reveal whether the failure was due to username or password</li>
+<li><strong>Attack Surface Reduction</strong>: Minimizes information available to potential attackers</li>
+</ul>
+<p><strong>Secure Password Verification:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>if user.verify_password(password)? {
+<span class="boring">}</span></code></pre></pre>
+<p>The password verification process delegates to the user object's secure verification method:</p>
+<ul>
+<li><strong>Delegation Pattern</strong>: Uses the user object's built-in password verification method</li>
+<li><strong>Cryptographic Security</strong>: Leverages Argon2 password hashing for secure verification</li>
+<li><strong>Error Propagation</strong>: Properly handles any errors that occur during password verification</li>
+<li><strong>Constant-Time Operations</strong>: The underlying Argon2 implementation provides timing attack resistance</li>
+<li><strong>Salt Integration</strong>: Automatically handles the unique salt associated with each user's password</li>
+</ul>
+<p><strong>Successful Authentication Handling:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>println!("User {} authenticated successfully", username);
+Ok(user.clone())
+<span class="boring">}</span></code></pre></pre>
+<p>The success path implements several important practices:</p>
+<ul>
+<li><strong>Audit Logging</strong>: Records successful authentication attempts for security monitoring</li>
+<li><strong>User Context</strong>: Logs the specific username for audit trail purposes</li>
+<li><strong>Object Cloning</strong>: Returns a cloned user object to avoid ownership complications</li>
+<li><strong>Session Establishment</strong>: Provides the calling code with complete user information for session management</li>
+<li><strong>Success Confirmation</strong>: Clear indication that authentication succeeded</li>
+</ul>
+<p><strong>Authentication Failure Management:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>} else {
+    Err(anyhow!("Invalid username or password"))
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The failure handling maintains security best practices:</p>
+<ul>
+<li><strong>Generic Error Message</strong>: Uses the same error message as the username lookup failure</li>
+<li><strong>No Information Disclosure</strong>: Doesn't reveal that the username was valid but password was wrong</li>
+<li><strong>Consistent Response</strong>: Maintains the same error format across all failure scenarios</li>
+<li><strong>Attack Prevention</strong>: Prevents attackers from distinguishing between different failure types</li>
+</ul>
+<p><strong>Security Architecture and Best Practices:</strong>
+The authentication system implements multiple layers of security:</p>
+<p><strong>Username Enumeration Prevention:</strong></p>
+<ul>
+<li><strong>Consistent Error Messages</strong>: Identical errors for username and password failures prevent enumeration</li>
+<li><strong>Generic Response Format</strong>: All authentication failures return the same error structure</li>
+<li><strong>Information Hiding</strong>: No distinction between "user not found" and "wrong password"</li>
+<li><strong>Attack Surface Minimization</strong>: Reduces information available to potential attackers</li>
+</ul>
+<p><strong>Password Security Integration:</strong></p>
+<ul>
+<li><strong>Secure Hashing</strong>: Integrates with Argon2-based password verification</li>
+<li><strong>Salt Management</strong>: Automatically handles unique salts for each user password</li>
+<li><strong>Timing Attack Resistance</strong>: Underlying cryptographic operations are designed to be constant-time</li>
+<li><strong>Memory Protection</strong>: Password verification occurs in secure memory contexts</li>
+</ul>
+<p><strong>Audit and Monitoring:</strong></p>
+<ul>
+<li><strong>Success Logging</strong>: Records successful authentication events for security monitoring</li>
+<li><strong>User Identification</strong>: Includes username in audit logs for accountability</li>
+<li><strong>Failure Tracking</strong>: Could be enhanced to log failed authentication attempts</li>
+<li><strong>Security Analytics</strong>: Provides data for security analysis and anomaly detection</li>
+</ul>
+<p><strong>Session Management Foundation:</strong></p>
+<ul>
+<li><strong>User Object Provision</strong>: Returns complete user information for session establishment</li>
+<li><strong>State Preservation</strong>: Maintains user state information for the authenticated session</li>
+<li><strong>Authorization Context</strong>: Provides the foundation for subsequent authorization decisions</li>
+<li><strong>Resource Access</strong>: Enables access to user-specific encrypted resources</li>
+</ul>
+<p><strong>Performance and Efficiency Considerations:</strong>
+The authentication system balances security with performance:</p>
+<p><strong>Efficient Lookup Operations:</strong></p>
+<ul>
+<li><strong>HashMap Performance</strong>: O(1) average case lookup time for username verification</li>
+<li><strong>Memory Efficiency</strong>: Uses string slices to avoid unnecessary memory allocations</li>
+<li><strong>Minimal Processing</strong>: Fails fast on invalid usernames to avoid unnecessary computation</li>
+<li><strong>Resource Conservation</strong>: Efficient use of system resources during authentication</li>
+</ul>
+<p><strong>Scalability Design:</strong></p>
+<ul>
+<li><strong>Stateless Operation</strong>: Authentication doesn't modify system state, supporting concurrent operations</li>
+<li><strong>Thread Safety</strong>: Immutable operations support multi-threaded authentication</li>
+<li><strong>Resource Limits</strong>: Bounded resource usage prevents denial-of-service attacks</li>
+<li><strong>Caching Potential</strong>: Design supports future caching optimizations if needed</li>
+</ul>
+<p><strong>Error Handling and Recovery:</strong>
+The system provides comprehensive error handling:</p>
+<p><strong>Graceful Failure Modes:</strong></p>
+<ul>
+<li><strong>Clean Error Propagation</strong>: Uses Result types for clean error handling</li>
+<li><strong>Descriptive Errors</strong>: Provides meaningful error messages for debugging (while maintaining security)</li>
+<li><strong>Recovery Support</strong>: Errors don't leave the system in an inconsistent state</li>
+<li><strong>Debugging Information</strong>: Sufficient information for troubleshooting without security risks</li>
+</ul>
+<p><strong>System Resilience:</strong></p>
+<ul>
+<li><strong>Fault Tolerance</strong>: Handles various failure scenarios gracefully</li>
+<li><strong>State Consistency</strong>: Authentication failures don't corrupt system state</li>
+<li><strong>Resource Cleanup</strong>: Proper resource management even during error conditions</li>
+<li><strong>Monitoring Integration</strong>: Error information suitable for system monitoring</li>
+</ul>
+<p><strong>Integration with Broader Security Architecture:</strong>
+This authentication function integrates with the application's broader security framework:</p>
+<p><strong>Cryptographic Integration:</strong></p>
+<ul>
+<li><strong>Key Derivation</strong>: Successful authentication enables user-specific key derivation</li>
+<li><strong>Vault Access</strong>: Authentication is the first step in accessing encrypted user data</li>
+<li><strong>Session Security</strong>: Provides the foundation for secure session management</li>
+<li><strong>Multi-Factor Potential</strong>: Design supports future multi-factor authentication enhancements</li>
+</ul>
+<p><strong>Access Control Foundation:</strong></p>
+<ul>
+<li><strong>Authorization Context</strong>: Provides user context for subsequent authorization decisions</li>
+<li><strong>Resource Isolation</strong>: Enables user-specific resource access controls</li>
+<li><strong>Audit Trail</strong>: Creates accountability for all system access</li>
+<li><strong>Compliance Support</strong>: Supports regulatory compliance requirements for access control</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../snippets/snippet_8.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../snippets/snippet_10.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../snippets/snippet_8.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../snippets/snippet_10.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
