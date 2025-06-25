@@ -1,0 +1,402 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Snippet 3 - Rust Notes App</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Rust Notes App</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="snippet-3-first-playtesting-with-functions"><a class="header" href="#snippet-3-first-playtesting-with-functions">Snippet 3: First playtesting with functions</a></h1>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>struct MyApp {
+    name: String,
+    age: u32,
+}
+
+impl MyApp {
+    fn new() -&gt; Self {
+        let mut app = Self {
+            name: String::new(),
+            age: 18,
+        };
+    }
+
+    fn increment(&amp;mut self) {
+        if self.age &lt; 120 {
+            self.age += 1;
+        }
+    }
+
+    fn decrement(&amp;mut self) {
+        if self.age &gt; 0 {
+            self.age -= 1;
+        }
+    }
+}
+
+egui::CentralPanel::default().show(ctx, |ui| {
+    ui.add(egui::Slider::new(&amp;mut self.age, 0..=120).text("years old"));
+
+    ui.horizontal(|ui| {
+        if ui.button("Increment").clicked() {
+            self.increment(); // Increment function call
+        }
+
+        if ui.button("Decrement").clicked() {
+            self.decrement(); // Decrement function call
+        }
+    });
+})
+<span class="boring">}</span></code></pre></pre>
+<p>This snippet introduces function-based interaction and demonstrates proper struct organization. The code includes:</p>
+<p><strong>MyApp struct</strong>: Contains the application state with name and age fields</p>
+<p><strong>Core functions</strong>:</p>
+<ul>
+<li><strong><code>new()</code></strong>: Constructor that initializes the app with default values</li>
+<li><strong><code>increment()</code></strong>: Safely increases age with upper bound checking (max 120)</li>
+<li><strong><code>decrement()</code></strong>: Safely decreases age with lower bound checking (min 0)</li>
+</ul>
+<p><strong>Interactive UI</strong>: Combines slider control with button-based increment/decrement functionality</p>
+<p>This shows the evolution from simple variables to structured, function-based application logic.</p>
+<h2 id="core-application-architecture-and-state-management"><a class="header" href="#core-application-architecture-and-state-management">Core Application Architecture and State Management</a></h2>
+<p>This code snippet establishes the fundamental application structure and demonstrates object-oriented programming principles in Rust. It showcases how to create a well-structured application with encapsulated state management and safe mutation methods.</p>
+<h3 id="detailed-structural-analysis"><a class="header" href="#detailed-structural-analysis">Detailed Structural Analysis</a></h3>
+<p><strong>Application State Structure:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>struct MyApp {
+    name: String,
+    age: u32,
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This struct represents the core application state with carefully chosen data types:</p>
+<ul>
+<li><strong><code>name: String</code></strong>: Uses Rust's owned <code>String</code> type rather than string slices, providing full ownership and mutability of the text data. This allows for dynamic text that can grow, shrink, and be modified throughout the application's lifetime</li>
+<li><strong><code>age: u32</code></strong>: Uses an unsigned 32-bit integer, which is perfect for representing age values. The choice of <code>u32</code> over smaller types like <code>u8</code> provides plenty of range while being efficient, and the unsigned nature prevents negative age values</li>
+</ul>
+<p><strong>Constructor Implementation:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn new() -&gt; Self {
+    let mut app = Self {
+        name: String::new(),
+        age: 18,
+    };
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The constructor follows Rust conventions and best practices:</p>
+<ul>
+<li><strong>Default Initialization</strong>: Creates a new instance with sensible default values</li>
+<li><strong>Empty String</strong>: Initializes name as an empty string, ready for user input</li>
+<li><strong>Reasonable Default Age</strong>: Sets age to 18, which is a common default for adult-oriented applications</li>
+<li><strong>Self Return</strong>: Returns the constructed instance using Rust's <code>Self</code> keyword for better maintainability</li>
+</ul>
+<p><strong>Safe Increment Method:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn increment(&amp;mut self) {
+    if self.age &lt; 120 {
+        self.age += 1;
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This method demonstrates defensive programming principles:</p>
+<ul>
+<li><strong>Mutable Self Reference</strong>: Takes <code>&amp;mut self</code> to allow modification of the instance state</li>
+<li><strong>Bounds Checking</strong>: Implements an upper limit of 120 years, which is a reasonable maximum human age</li>
+<li><strong>Overflow Prevention</strong>: Prevents integer overflow that could cause undefined behavior or crashes</li>
+<li><strong>Silent Boundary Handling</strong>: When the maximum is reached, the method gracefully does nothing rather than throwing errors</li>
+<li><strong>Single Responsibility</strong>: The method has one clear purpose - safely incrementing the age value</li>
+</ul>
+<p><strong>Safe Decrement Method:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn decrement(&amp;mut self) {
+    if self.age &gt; 0 {
+        self.age -= 1;
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>This method mirrors the increment functionality with appropriate safeguards:</p>
+<ul>
+<li><strong>Lower Bound Protection</strong>: Prevents age from going below zero, which would be nonsensical</li>
+<li><strong>Underflow Prevention</strong>: Since <code>u32</code> is unsigned, attempting to subtract from zero would cause underflow</li>
+<li><strong>Consistent Behavior</strong>: Matches the increment method's approach to boundary conditions</li>
+<li><strong>Graceful Degradation</strong>: Silently handles boundary conditions without disrupting user experience</li>
+</ul>
+<p><strong>User Interface Integration:</strong>
+The UI implementation demonstrates several important patterns:</p>
+<p><strong>Age Slider Integration:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>ui.add(egui::Slider::new(&amp;mut self.age, 0..=120).text("years old"));
+<span class="boring">}</span></code></pre></pre>
+<ul>
+<li><strong>Direct State Binding</strong>: The slider directly modifies the application state</li>
+<li><strong>Range Consistency</strong>: Uses the same 0-120 range as the increment/decrement methods</li>
+<li><strong>Immediate Feedback</strong>: Changes are instantly reflected in the UI</li>
+</ul>
+<p><strong>Interactive Button Implementation:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>ui.horizontal(|ui| {
+    if ui.button("Increment").clicked() {
+        self.increment();
+    }
+    if ui.button("Decrement").clicked() {
+        self.decrement();
+    }
+});
+<span class="boring">}</span></code></pre></pre>
+<p>This button layout showcases several UI design principles:</p>
+<ul>
+<li><strong>Horizontal Grouping</strong>: Places related buttons side by side for intuitive interaction</li>
+<li><strong>Event-Driven Actions</strong>: Buttons trigger specific methods when clicked</li>
+<li><strong>Method Delegation</strong>: UI events are handled by calling appropriate business logic methods</li>
+<li><strong>Consistent Interaction</strong>: Both buttons follow the same interaction pattern</li>
+</ul>
+<p><strong>Architectural Benefits:</strong>
+This design pattern provides several advantages:</p>
+<ul>
+<li><strong>Encapsulation</strong>: State and behavior are contained within the struct</li>
+<li><strong>Safety</strong>: All mutations go through controlled methods with validation</li>
+<li><strong>Testability</strong>: Methods can be easily unit tested in isolation</li>
+<li><strong>Maintainability</strong>: Clear separation between UI and business logic</li>
+<li><strong>Extensibility</strong>: New methods and state can be easily added following the same patterns</li>
+</ul>
+<p><strong>Memory Safety and Performance:</strong></p>
+<ul>
+<li><strong>Stack Allocation</strong>: The struct is lightweight and can be stack-allocated</li>
+<li><strong>No Dynamic Allocation</strong>: The age field requires no heap allocation</li>
+<li><strong>Efficient Updates</strong>: Direct field access provides optimal performance</li>
+<li><strong>Rust Ownership</strong>: Leverages Rust's ownership system for memory safety without garbage collection</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../snippets/snippet_2.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../snippets/snippet_4.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../snippets/snippet_2.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../snippets/snippet_4.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+        <!-- Livereload script (if served using the cli tool) -->
+        <script>
+            const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsAddress = wsProtocol + "//" + location.host + "/" + "__livereload";
+            const socket = new WebSocket(wsAddress);
+            socket.onmessage = function (event) {
+                if (event.data === "reload") {
+                    socket.close();
+                    location.reload();
+                }
+            };
+
+            window.onbeforeunload = function() {
+                socket.close();
+            }
+        </script>
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
