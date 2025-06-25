@@ -1,11 +1,10 @@
 // @Author: Matteo Cipriani
 // @Date:   04-06-2025 10:24:58
 // @Last Modified by:   Matteo Cipriani
-// @Last Modified time: 25-06-2025 09:40:07
+// @Last Modified time: 25-06-2025 10:27:17
 
 use eframe::egui;
 use egui::IconData;
-use image;
 
 mod app;
 mod auth;

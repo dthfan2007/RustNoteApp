@@ -1,14 +1,13 @@
 // @Author: Matteo Cipriani
 // @Date:   04-06-2025 10:29:20
 // @Last Modified by:   Matteo Cipriani
-// @Last Modified time: 20-06-2025 08:09:51
+// @Last Modified time: 25-06-2025 10:27:26
 use anyhow::{anyhow, Result};
 use argon2::{password_hash::SaltString, Argon2, PasswordHash, PasswordHasher, PasswordVerifier};
 use chacha20poly1305::{
     aead::{Aead, AeadCore, KeyInit, OsRng},
     ChaCha20Poly1305, Nonce,
 };
-use chrono;
 use dirs::config_dir;
 use serde::{Deserialize, Serialize};
 use std::collections::hash_map::DefaultHasher;

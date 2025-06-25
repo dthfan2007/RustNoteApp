@@ -1,11 +1,10 @@
 // @Author: Matteo Cipriani
 // @Date:   04-06-2025 10:29:39
 // @Last Modified by:   Matteo Cipriani
-// @Last Modified time: 20-06-2025 08:10:41
+// @Last Modified time: 25-06-2025 10:27:34
 use crate::crypto::CryptoManager;
 use crate::note::Note;
 use anyhow::Result;
-use serde_json;
 use std::collections::HashMap;
 use std::fs;
 
