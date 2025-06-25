@@ -1,0 +1,488 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Snippet 12 - Rust Notes App</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Rust Notes App</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="snippet-12-display-relative-time"><a class="header" href="#snippet-12-display-relative-time">Snippet 12: Display relative time</a></h1>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn relative_time(&amp;self) -&gt; String {
+    let now = Utc::now().with_timezone(&amp;Zurich);
+    let modified = self.modified_at_local();
+    let duration = now.signed_duration_since(modified);
+
+    if duration.num_seconds() &lt; 60 {
+        "Just now".to_string()
+    } else if duration.num_minutes() &lt; 60 {
+        let minutes = duration.num_minutes();
+        if minutes == 1 {
+            "1 minute ago".to_string()
+        } else {
+            format!("{} minutes ago", minutes)
+        }
+    } else if duration.num_hours() &lt; 24 {
+        let hours = duration.num_hours();
+        if hours == 1 {
+            "1 hour ago".to_string()
+        } else {
+            format!("{} hours ago", hours)
+        }
+    } else if duration.num_days() &lt; 7 {
+        let days = duration.num_days();
+        if days == 1 {
+            "Yesterday".to_string()
+        } else {
+            format!("{} days ago", days)
+        }
+    } else if duration.num_weeks() &lt; 4 {
+        let weeks = duration.num_weeks();
+        if weeks == 1 {
+            "1 week ago".to_string()
+        } else {
+            format!("{} weeks ago", weeks)
+        }
+    } else {
+        // For older notes, show the actual date
+        self.format_modified_time()
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="advanced-human-readable-time-display-system-with-localization"><a class="header" href="#advanced-human-readable-time-display-system-with-localization">Advanced Human-Readable Time Display System with Localization</a></h2>
+<p>This sophisticated function implements a comprehensive relative time display system that converts timestamps into human-readable, contextually appropriate time descriptions. It demonstrates advanced date/time handling, localization support, and user experience optimization through intelligent time formatting that adapts to different time scales.</p>
+<h3 id="comprehensive-time-display-analysis"><a class="header" href="#comprehensive-time-display-analysis">Comprehensive Time Display Analysis</a></h3>
+<p><strong>Function Signature and Purpose:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn relative_time(&amp;self) -&gt; String
+<span class="boring">}</span></code></pre></pre>
+<p>This function serves as the primary time display mechanism for the note system:</p>
+<ul>
+<li><strong>Immutable Self Reference</strong>: Uses <code>&amp;self</code> to access note timestamp data without modification</li>
+<li><strong>String Return</strong>: Returns a formatted string optimized for human readability</li>
+<li><strong>Context Awareness</strong>: Adapts the time format based on how much time has elapsed</li>
+<li><strong>Localization Support</strong>: Integrates with timezone handling for accurate local time display</li>
+</ul>
+<p><strong>Timezone and Current Time Handling:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let now = Utc::now().with_timezone(&amp;Zurich);
+let modified = self.modified_at_local();
+<span class="boring">}</span></code></pre></pre>
+<p>The timezone management system provides several critical features:</p>
+<ul>
+<li><strong>UTC Foundation</strong>: Uses UTC as the base time to ensure consistency across systems</li>
+<li><strong>Local Timezone Conversion</strong>: Converts to Zurich timezone for localized display</li>
+<li><strong>Consistent Reference</strong>: Establishes a consistent <code>now</code> reference point for all calculations</li>
+<li><strong>Local Time Integration</strong>: Uses the note`s local modification time for accurate comparison</li>
+<li><strong>Cross-Platform Compatibility</strong>: Works consistently across different operating systems and regions</li>
+</ul>
+<p><strong>Duration Calculation and Analysis:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let duration = now.signed_duration_since(modified);
+<span class="boring">}</span></code></pre></pre>
+<p>The duration calculation provides the foundation for relative time display:</p>
+<ul>
+<li><strong>Signed Duration</strong>: Uses signed duration to handle both past and future times correctly</li>
+<li><strong>Precise Calculation</strong>: Provides accurate time differences down to the second level</li>
+<li><strong>Timezone Aware</strong>: Accounts for timezone differences in the calculation</li>
+<li><strong>DST Handling</strong>: Properly handles daylight saving time transitions</li>
+<li><strong>Leap Second Support</strong>: Integrates with the chrono library`s leap second handling</li>
+</ul>
+<p><strong>Immediate Time Range (&lt; 1 minute):</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>if duration.num_seconds() &lt; 60 {
+    "Just now".to_string()
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The immediate time range provides optimal user experience for recent activity:</p>
+<ul>
+<li><strong>Immediate Feedback</strong>: Recognizes very recent modifications as <code>Just now</code></li>
+<li><strong>User Psychology</strong>: Aligns with user expectations for immediate actions</li>
+<li><strong>Simplicity</strong>: Avoids confusing users with <code>30 seconds ago</code> type messages</li>
+<li><strong>Consistency</strong>: Provides a consistent experience for all sub-minute timeframes</li>
+<li><strong>Performance</strong>: Quick calculation and formatting for the most common case</li>
+</ul>
+<p><strong>Minute-Level Precision (1-59 minutes):</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>else if duration.num_minutes() &lt; 60 {
+    let minutes = duration.num_minutes();
+    if minutes == 1 {
+        "1 minute ago".to_string()
+    } else {
+        format!("{} minutes ago", minutes)
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The minute-level display implements grammatically correct pluralization:</p>
+<ul>
+<li><strong>Singular Handling</strong>: Special case for <code>1 minute ago</code> to maintain proper grammar</li>
+<li><strong>Plural Formatting</strong>: Uses plural form for multiple minutes</li>
+<li><strong>Precise Timing</strong>: Provides minute-level precision for recent activity</li>
+<li><strong>User Clarity</strong>: Clear indication of recent but not immediate activity</li>
+<li><strong>Linguistic Correctness</strong>: Maintains proper English grammar rules</li>
+</ul>
+<p><strong>Hour-Level Precision (1-23 hours):</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>else if duration.num_hours() &lt; 24 {
+    let hours = duration.num_hours();
+    if hours == 1 {
+        "1 hour ago".to_string()
+    } else {
+        format!("{} hours ago", hours)
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The hour-level display provides appropriate granularity for same-day activity:</p>
+<ul>
+<li><strong>Same-Day Context</strong>: Recognizes activity within the current day</li>
+<li><strong>Grammatical Precision</strong>: Handles singular vs plural forms correctly</li>
+<li><strong>User Relevance</strong>: Hours are meaningful units for daily activity tracking</li>
+<li><strong>Timezone Consistency</strong>: Properly accounts for timezone in hour calculations</li>
+<li><strong>Business Context</strong>: Aligns with typical business hour understanding</li>
+</ul>
+<p><strong>Day-Level Precision (1-6 days):</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>else if duration.num_days() &lt; 7 {
+    let days = duration.num_days();
+    if days == 1 {
+        "Yesterday".to_string()
+    } else {
+        format!("{} days ago", days)
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The day-level display provides contextually relevant recent history:</p>
+<ul>
+<li><strong>Yesterday Special Case</strong>: Uses the familiar <code>Yesterday</code> term for single-day past</li>
+<li><strong>Recent History</strong>: Covers the most relevant recent timeframe for note activity</li>
+<li><strong>Weekly Context</strong>: Stays within the current week for contextual relevance</li>
+<li><strong>User Familiarity</strong>: Uses terms that users naturally think in (yesterday, few days ago)</li>
+<li><strong>Calendar Awareness</strong>: Aligns with how users mentally organize recent time</li>
+</ul>
+<p><strong>Week-Level Precision (1-3 weeks):</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>else if duration.num_weeks() &lt; 4 {
+    let weeks = duration.num_weeks();
+    if weeks == 1 {
+        "1 week ago".to_string()
+    } else {
+        format!("{} weeks ago", weeks)
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The week-level display handles medium-term recent activity:</p>
+<ul>
+<li><strong>Weekly Granularity</strong>: Appropriate level of detail for medium-term activity</li>
+<li><strong>Monthly Boundary</strong>: Stops before reaching monthly timeframes</li>
+<li><strong>Singular Handling</strong>: Proper grammar for single week references</li>
+<li><strong>User Context</strong>: Weeks are meaningful units for medium-term planning and memory</li>
+<li><strong>Precision Balance</strong>: Balances precision with readability for this timeframe</li>
+</ul>
+<p><strong>Long-Term Absolute Time Display:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>else {
+    // For older notes, show the actual date
+    self.format_modified_time()
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The long-term display switches to absolute time for maximum clarity:</p>
+<ul>
+<li><strong>Absolute Reference</strong>: Uses actual dates for older content where relative time becomes less meaningful</li>
+<li><strong>Precision Maintenance</strong>: Maintains full precision for historical reference</li>
+<li><strong>User Clarity</strong>: Absolute dates are clearer than <code>many weeks ago</code> type messages</li>
+<li><strong>Historical Context</strong>: Provides proper historical context for older notes</li>
+<li><strong>Archival Support</strong>: Supports long-term note archival and reference</li>
+</ul>
+<p><strong>Linguistic and User Experience Considerations:</strong>
+The function implements several advanced user experience features:</p>
+<p><strong>Grammatical Correctness:</strong></p>
+<ul>
+<li><strong>Singular/Plural Handling</strong>: Proper grammar for all time units (1 minute vs 2 minutes)</li>
+<li><strong>Natural Language</strong>: Uses natural language patterns that users expect</li>
+<li><strong>Consistency</strong>: Maintains consistent grammatical patterns across all time ranges</li>
+<li><strong>Readability</strong>: Optimizes for immediate comprehension and readability</li>
+</ul>
+<p><strong>Contextual Appropriateness:</strong></p>
+<ul>
+<li><strong>Scale-Appropriate Granularity</strong>: Uses appropriate precision for each time scale</li>
+<li><strong>User Mental Models</strong>: Aligns with how users naturally think about time</li>
+<li><strong>Activity Context</strong>: Considers the context of note-taking and modification activity</li>
+<li><strong>Cognitive Load</strong>: Minimizes cognitive load required to understand time references</li>
+</ul>
+<p><strong>Cultural and Regional Considerations:</strong></p>
+<ul>
+<li><strong>Timezone Awareness</strong>: Properly handles timezone differences and conversions</li>
+<li><strong>Localization Foundation</strong>: Provides foundation for future localization enhancements</li>
+<li><strong>Cultural Time Concepts</strong>: Uses time concepts that are universal across cultures</li>
+<li><strong>Regional Adaptation</strong>: Can be adapted for different regional time display preferences</li>
+</ul>
+<p><strong>Performance and Efficiency:</strong>
+The function is optimized for both performance and accuracy:</p>
+<p><strong>Calculation Efficiency:</strong></p>
+<ul>
+<li><strong>Single Duration Calculation</strong>: Calculates duration once and reuses for all comparisons</li>
+<li><strong>Efficient Comparisons</strong>: Uses efficient numeric comparisons for time range checking</li>
+<li><strong>Minimal String Allocation</strong>: Minimizes string allocations through careful formatting choices</li>
+<li><strong>Caching Potential</strong>: Design supports future caching optimizations if needed</li>
+</ul>
+<p><strong>Memory Management:</strong></p>
+<ul>
+<li><strong>String Optimization</strong>: Efficient string creation and formatting</li>
+<li><strong>No Unnecessary Allocations</strong>: Avoids creating temporary objects during calculation</li>
+<li><strong>Rust Ownership</strong>: Leverages Rust`s ownership system for efficient memory management</li>
+<li><strong>Return Value Optimization</strong>: Optimized string return for minimal copying</li>
+</ul>
+<p><strong>Integration with Note System:</strong>
+This function integrates seamlessly with the broader note management system:</p>
+<p><strong>Note Metadata Integration:</strong></p>
+<ul>
+<li><strong>Modification Time Access</strong>: Integrates with note modification timestamp tracking</li>
+<li><strong>Timezone Consistency</strong>: Maintains consistent timezone handling across the application</li>
+<li><strong>Update Responsiveness</strong>: Provides immediate updates when note modification times change</li>
+<li><strong>Sorting Support</strong>: Supports note sorting and organization by modification time</li>
+</ul>
+<p><strong>User Interface Integration:</strong></p>
+<ul>
+<li><strong>Display Optimization</strong>: Optimized for display in various UI contexts (lists, details, etc.)</li>
+<li><strong>Update Frequency</strong>: Designed to be called frequently for real-time updates</li>
+<li><strong>Responsive Design</strong>: Works well in both desktop and mobile interface contexts</li>
+<li><strong>Accessibility</strong>: Provides clear, accessible time information for all users</li>
+</ul>
+<p><strong>Future Enhancement Possibilities:</strong>
+The design supports several potential future enhancements:</p>
+<p><strong>Internationalization:</strong></p>
+<ul>
+<li><strong>Multi-Language Support</strong>: Foundation for supporting multiple languages</li>
+<li><strong>Cultural Time Formats</strong>: Can be extended to support different cultural time formats</li>
+<li><strong>Regional Preferences</strong>: Supports customization for regional time display preferences</li>
+<li><strong>Localization Framework</strong>: Integrates with standard localization frameworks</li>
+</ul>
+<p><strong>Advanced Features:</strong></p>
+<ul>
+<li><strong>Fuzzy Time Options</strong>: Could support <code>about an hour ago</code> style fuzzy time display</li>
+<li><strong>Precision Preferences</strong>: Could allow users to choose their preferred time precision</li>
+<li><strong>Context Awareness</strong>: Could adapt based on the specific context where time is displayed</li>
+<li><strong>Smart Updating</strong>: Could implement smart update intervals based on the time scale</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../snippets/snippet_11.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../snippets/snippet_13.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../snippets/snippet_11.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../snippets/snippet_13.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

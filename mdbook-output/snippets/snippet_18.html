@@ -1,0 +1,690 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Snippet 18 - Rust Notes App</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Rust Notes App</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="snippet-18-render-authentication-gui"><a class="header" href="#snippet-18-render-authentication-gui">Snippet 18: Render Authentication GUI</a></h1>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn render_auth_dialog(&amp;mut self, ctx: &amp;egui::Context) {
+    egui::CentralPanel::default().show(ctx, |ui| {
+        ui.vertical_centered(|ui| {
+            ui.add_space(75.0);
+            ui.heading("Secure Notes");
+            ui.add_space(20.0);
+
+            if self.is_authenticating {
+                ui.label("Processing... Please wait");
+                ui.spinner();
+
+                // Show elapsed time
+                if let Some(start_time) = self.auth_start_time {
+                    let elapsed = start_time.elapsed().as_secs_f64();
+                    ui.label(format!("Elapsed: {:.1}s", elapsed));
+
+                    // Show warning if taking too long
+                    if elapsed &gt; 10.0 {
+                        ui.colored_label(
+                            egui::Color32::YELLOW,
+                            "This is taking longer than expected...",
+                        );
+                    }
+
+                    if elapsed &gt; 30.0 {
+                        ui.colored_label(
+                            egui::Color32::RED,
+                            "Something may be wrong. Try restarting the application.",
+                        );
+                        if ui.button("Cancel Authentication").clicked() {
+                            self.is_authenticating = false;
+                            self.auth_receiver = None;
+                            self.auth_start_time = None;
+                        }
+                    }
+                }
+
+                // Request repaint to update timer
+                ctx.request_repaint_after(std::time::Duration::from_millis(100));
+            } else {
+                let screen_width = ui.available_width();
+
+                // Mode selection - calculate actual widget width and center it
+                ui.horizontal(|ui| {
+                    // Calculate actual text widths
+                    let login_text_size = ui
+                        .fonts(|f| {
+                            f.layout_no_wrap(
+                                "Login".to_string(),
+                                egui::FontId::default(),
+                                egui::Color32::WHITE,
+                            )
+                        })
+                        .size();
+
+                    let register_text_size = ui
+                        .fonts(|f| {
+                            f.layout_no_wrap(
+                                "Register".to_string(),
+                                egui::FontId::default(),
+                                egui::Color32::WHITE,
+                            )
+                        })
+                        .size();
+
+                    let spacing = ui.spacing().item_spacing.x;
+                    let total_width = login_text_size.x + register_text_size.x + spacing;
+
+                    let padding = (screen_width - total_width) / 2.0;
+
+                    ui.add_space(padding.max(0.0));
+                    ui.selectable_value(&amp;mut self.auth_mode, AuthMode::Login, "Login");
+                    ui.selectable_value(&amp;mut self.auth_mode, AuthMode::Register, "Register");
+                });
+
+                ui.add_space(20.0);
+
+                // Username input
+                ui.label("Username:");
+                ui.add(
+                    egui::TextEdit::singleline(&amp;mut self.username_input).desired_width(200.0),
+                );
+
+                ui.add_space(10.0);
+
+                // Password input
+                ui.label("Password:");
+                let password_response = ui.add(
+                    egui::TextEdit::singleline(&amp;mut self.password_input)
+                        .password(true)
+                        .desired_width(200.0),
+                );
+
+                // Confirm password for registration
+                if self.auth_mode == AuthMode::Register {
+                    ui.add_space(10.0);
+                    ui.label("Confirm Password:");
+                    ui.add(
+                        egui::TextEdit::singleline(&amp;mut self.confirm_password_input)
+                            .password(true)
+                            .desired_width(200.0),
+                    );
+                }
+
+                ui.add_space(20.0);
+
+                // Submit button
+                let button_text = match self.auth_mode {
+                    AuthMode::Login =&gt; "Login",
+                    AuthMode::Register =&gt; "Register",
+                };
+
+                let can_submit = !self.username_input.trim().is_empty()
+                    &amp;&amp; !self.password_input.is_empty()
+                    &amp;&amp; self.password_input.len() &gt;= 6
+                    &amp;&amp; (self.auth_mode == AuthMode::Login
+                        || self.password_input == self.confirm_password_input);
+
+                if ui
+                    .add_enabled(can_submit, egui::Button::new(button_text))
+                    .clicked()
+                    || (password_response.lost_focus()
+                        &amp;&amp; ui.input(|i| i.key_pressed(egui::Key::Enter))
+                        &amp;&amp; can_submit)
+                {
+                    if self.auth_mode == AuthMode::Register
+                        &amp;&amp; self.password_input != self.confirm_password_input
+                    {
+                        self.authentication_error = Some("Passwords do not match".to_string());
+                    } else if self.password_input.len() &lt; 6 {
+                        self.authentication_error =
+                            Some("Password must be at least 6 characters long".to_string());
+                    } else {
+                        let username = self.username_input.clone();
+                        let password = self.password_input.clone();
+                        let is_registration = self.auth_mode == AuthMode::Register;
+                        self.start_authentication(username, password, is_registration);
+                    }
+                }
+
+                // Show validation errors
+                if self.auth_mode == AuthMode::Register
+                    &amp;&amp; !self.password_input.is_empty()
+                    &amp;&amp; !self.confirm_password_input.is_empty()
+                    &amp;&amp; self.password_input != self.confirm_password_input
+                {
+                    ui.add_space(10.0);
+                    ui.colored_label(egui::Color32::YELLOW, "Passwords do not match");
+                }
+
+                if !self.password_input.is_empty() &amp;&amp; self.password_input.len() &lt; 6 {
+                    ui.add_space(10.0);
+                    ui.colored_label(
+                        egui::Color32::YELLOW,
+                        "Password must be at least 6 characters",
+                    );
+                }
+
+                // Show authentication error
+                if let Some(error) = &amp;self.authentication_error {
+                    ui.add_space(10.0);
+                    ui.colored_label(egui::Color32::RED, error);
+                }
+
+                // Show user count for context
+                if let Some(ref user_manager) = self.user_manager {
+                    let screen_height = ui.available_height();
+                    ui.add_space(screen_height - 45.0);
+                    ui.separator();
+                    ui.small(format!(
+                        "Registered users: {}",
+                        user_manager.get_user_count()
+                    ));
+                    ui.small(format!("Current time: {}", self.get_current_time()));
+                }
+            }
+        });
+    });
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="comprehensive-authentication-user-interface-with-advanced-ux-design"><a class="header" href="#comprehensive-authentication-user-interface-with-advanced-ux-design">Comprehensive Authentication User Interface with Advanced UX Design</a></h2>
+<p>This sophisticated function implements a complete authentication user interface that combines security, usability, and visual design excellence. It demonstrates advanced GUI programming techniques, real-time validation, responsive design principles, and comprehensive user experience optimization for secure authentication workflows.</p>
+<h3 id="detailed-authentication-ui-architecture-analysis"><a class="header" href="#detailed-authentication-ui-architecture-analysis">Detailed Authentication UI Architecture Analysis</a></h3>
+<p><strong>Function Signature and UI Framework Integration:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn render_auth_dialog(&amp;mut self, ctx: &amp;egui::Context)
+<span class="boring">}</span></code></pre></pre>
+<p>This function serves as the primary authentication interface with several key characteristics:</p>
+<ul>
+<li><strong>Mutable Self Reference</strong>: Uses <code>&amp;mut self</code> to manage authentication state and user input</li>
+<li><strong>Context Integration</strong>: Takes egui context for complete UI framework integration</li>
+<li><strong>Stateful Rendering</strong>: Manages complex UI state across multiple authentication scenarios</li>
+<li><strong>Event Handling</strong>: Handles user interactions and input validation in real-time</li>
+<li><strong>Responsive Design</strong>: Adapts to different screen sizes and user interface contexts</li>
+</ul>
+<p><strong>Central Panel Layout and Visual Hierarchy:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>egui::CentralPanel::default().show(ctx, |ui| {
+    ui.vertical_centered(|ui| {
+        ui.add_space(75.0);
+        ui.heading("Secure Notes");
+        ui.add_space(20.0);
+<span class="boring">}</span></code></pre></pre>
+<p>The layout system implements sophisticated visual design principles:</p>
+<ul>
+<li><strong>Central Panel Usage</strong>: Utilizes full available screen space for authentication interface</li>
+<li><strong>Vertical Centering</strong>: Centers all content vertically for balanced visual presentation</li>
+<li><strong>Strategic Spacing</strong>: Uses carefully calculated spacing (75.0, 20.0) for optimal visual hierarchy</li>
+<li><strong>Brand Presentation</strong>: Prominently displays application name as primary heading</li>
+<li><strong>Professional Appearance</strong>: Creates clean, professional authentication interface</li>
+</ul>
+<p><strong>Authentication State Management and Dynamic UI:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>if self.is_authenticating {
+    ui.label("Processing... Please wait");
+    ui.spinner();
+<span class="boring">}</span></code></pre></pre>
+<p>The state-driven UI system provides comprehensive user feedback:</p>
+<ul>
+<li><strong>State-Responsive Interface</strong>: Adapts interface based on current authentication state</li>
+<li><strong>Clear Communication</strong>: Provides unambiguous status messages to users</li>
+<li><strong>Visual Indicators</strong>: Uses animated spinner to indicate ongoing processing</li>
+<li><strong>User Expectation Management</strong>: Sets appropriate expectations for processing duration</li>
+<li><strong>Anxiety Reduction</strong>: Reduces user anxiety through clear status communication</li>
+</ul>
+<p><strong>Real-Time Performance Monitoring and User Feedback:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>if let Some(start_time) = self.auth_start_time {
+    let elapsed = start_time.elapsed().as_secs_f64();
+    ui.label(format!("Elapsed: {:.1}s", elapsed));
+<span class="boring">}</span></code></pre></pre>
+<p>The performance monitoring system provides transparent feedback:</p>
+<ul>
+<li><strong>Real-Time Updates</strong>: Continuously displays elapsed authentication time</li>
+<li><strong>Performance Transparency</strong>: Gives users insight into system performance</li>
+<li><strong>Precision Display</strong>: Shows time with appropriate precision (0.1 second)</li>
+<li><strong>User Confidence</strong>: Builds confidence by showing active system operation</li>
+<li><strong>Debugging Aid</strong>: Helps identify performance issues during authentication</li>
+</ul>
+<p><strong>Progressive Warning System with Escalating Urgency:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>if elapsed &gt; 10.0 {
+    ui.colored_label(egui::Color32::YELLOW, "This is taking longer than expected...");
+}
+if elapsed &gt; 30.0 {
+    ui.colored_label(egui::Color32::RED, "Something may be wrong. Try restarting the application.");
+    if ui.button("Cancel Authentication").clicked() {
+        self.is_authenticating = false;
+        self.auth_receiver = None;
+        self.auth_start_time = None;
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The warning system implements sophisticated user guidance:</p>
+<ul>
+<li><strong>Escalating Warnings</strong>: Provides increasingly urgent warnings as time progresses</li>
+<li><strong>Color Psychology</strong>: Uses yellow for caution and red for urgent situations</li>
+<li><strong>Actionable Guidance</strong>: Provides specific recommendations for user action</li>
+<li><strong>Escape Mechanism</strong>: Offers users ability to cancel stuck authentication</li>
+<li><strong>System Recovery</strong>: Includes proper state cleanup when users cancel</li>
+</ul>
+<p><strong>Continuous UI Updates and Responsiveness:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>ctx.request_repaint_after(std::time::Duration::from_millis(100));
+<span class="boring">}</span></code></pre></pre>
+<p>The update system ensures smooth user experience:</p>
+<ul>
+<li><strong>High Refresh Rate</strong>: Updates UI every 100ms for smooth timing display</li>
+<li><strong>Responsive Feedback</strong>: Ensures users see immediate feedback for actions</li>
+<li><strong>Performance Balance</strong>: Balances update frequency with system performance</li>
+<li><strong>Battery Consideration</strong>: Uses reasonable frequency to conserve battery</li>
+<li><strong>Professional Feel</strong>: Provides smooth, professional user experience</li>
+</ul>
+<p><strong>Dynamic Layout Calculation and Responsive Design:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let screen_width = ui.available_width();
+ui.horizontal(|ui| {
+    let login_text_size = ui.fonts(|f| {
+        f.layout_no_wrap("Login".to_string(), egui::FontId::default(), egui::Color32::WHITE)
+    }).size();
+    let register_text_size = ui.fonts(|f| {
+        f.layout_no_wrap("Register".to_string(), egui::FontId::default(), egui::Color32::WHITE)
+    }).size();
+    let spacing = ui.spacing().item_spacing.x;
+    let total_width = login_text_size.x + register_text_size.x + spacing;
+    let padding = (screen_width - total_width) / 2.0;
+    ui.add_space(padding.max(0.0));
+<span class="boring">}</span></code></pre></pre>
+<p>The responsive layout system demonstrates advanced UI programming:</p>
+<ul>
+<li><strong>Dynamic Width Calculation</strong>: Calculates actual text widths for precise centering</li>
+<li><strong>Font Metrics Integration</strong>: Uses font system to measure actual text dimensions</li>
+<li><strong>Responsive Centering</strong>: Centers elements based on actual content size</li>
+<li><strong>Cross-Platform Compatibility</strong>: Works across different font systems and DPI settings</li>
+<li><strong>Professional Alignment</strong>: Ensures perfect visual alignment regardless of content</li>
+</ul>
+<p><strong>Authentication Mode Selection Interface:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>ui.selectable_value(&amp;mut self.auth_mode, AuthMode::Login, "Login");
+ui.selectable_value(&amp;mut self.auth_mode, AuthMode::Register, "Register");
+<span class="boring">}</span></code></pre></pre>
+<p>The mode selection system provides intuitive user control:</p>
+<ul>
+<li><strong>Clear Mode Distinction</strong>: Clearly separates login and registration modes</li>
+<li><strong>Visual Selection</strong>: Uses selectable values for clear mode indication</li>
+<li><strong>State Management</strong>: Properly manages authentication mode state</li>
+<li><strong>User Control</strong>: Gives users clear control over authentication type</li>
+<li><strong>Consistent Interface</strong>: Maintains consistent interface patterns</li>
+</ul>
+<p><strong>Input Field Management and Validation:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>ui.label("Username:");
+ui.add(egui::TextEdit::singleline(&amp;mut self.username_input).desired_width(200.0));
+ui.add_space(10.0);
+ui.label("Password:");
+let password_response = ui.add(
+    egui::TextEdit::singleline(&amp;mut self.password_input)
+        .password(true)
+        .desired_width(200.0),
+);
+<span class="boring">}</span></code></pre></pre>
+<p>The input system implements comprehensive form design:</p>
+<ul>
+<li><strong>Clear Labeling</strong>: Provides clear, accessible labels for all input fields</li>
+<li><strong>Consistent Sizing</strong>: Uses consistent width (200.0) for visual alignment</li>
+<li><strong>Password Security</strong>: Uses password mode for secure password entry</li>
+<li><strong>Response Capture</strong>: Captures input responses for event handling</li>
+<li><strong>Accessibility</strong>: Implements proper label-input relationships</li>
+</ul>
+<p><strong>Conditional Registration Fields:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>if self.auth_mode == AuthMode::Register {
+    ui.add_space(10.0);
+    ui.label("Confirm Password:");
+    ui.add(
+        egui::TextEdit::singleline(&amp;mut self.confirm_password_input)
+            .password(true)
+            .desired_width(200.0),
+    );
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The conditional field system provides mode-specific interface:</p>
+<ul>
+<li><strong>Context-Sensitive Fields</strong>: Shows additional fields only when needed</li>
+<li><strong>Registration Support</strong>: Provides password confirmation for registration</li>
+<li><strong>Consistent Styling</strong>: Maintains consistent styling across all fields</li>
+<li><strong>User Experience</strong>: Reduces interface complexity when not needed</li>
+<li><strong>Security Enhancement</strong>: Adds password confirmation for registration security</li>
+</ul>
+<p><strong>Advanced Form Validation and User Feedback:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let can_submit = !self.username_input.trim().is_empty()
+    &amp;&amp; !self.password_input.is_empty()
+    &amp;&amp; self.password_input.len() &gt;= 6
+    &amp;&amp; (self.auth_mode == AuthMode::Login
+        || self.password_input == self.confirm_password_input);
+<span class="boring">}</span></code></pre></pre>
+<p>The validation system implements comprehensive input checking:</p>
+<ul>
+<li><strong>Multi-Criteria Validation</strong>: Checks multiple validation criteria simultaneously</li>
+<li><strong>Real-Time Feedback</strong>: Provides immediate validation feedback</li>
+<li><strong>Mode-Specific Rules</strong>: Applies different validation rules for login vs registration</li>
+<li><strong>Security Requirements</strong>: Enforces minimum password length requirements</li>
+<li><strong>User Guidance</strong>: Enables/disables submit button based on validation state</li>
+</ul>
+<p><strong>Submit Button and Keyboard Interaction:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>if ui.add_enabled(can_submit, egui::Button::new(button_text)).clicked()
+    || (password_response.lost_focus()
+        &amp;&amp; ui.input(|i| i.key_pressed(egui::Key::Enter))
+        &amp;&amp; can_submit)
+<span class="boring">}</span></code></pre></pre>
+<p>The submission system provides multiple interaction methods:</p>
+<ul>
+<li><strong>Button Interaction</strong>: Traditional button-based form submission</li>
+<li><strong>Keyboard Shortcuts</strong>: Enter key support for efficient interaction</li>
+<li><strong>Validation Integration</strong>: Only allows submission when validation passes</li>
+<li><strong>Focus Management</strong>: Handles focus changes appropriately</li>
+<li><strong>Accessibility</strong>: Supports both mouse and keyboard interaction patterns</li>
+</ul>
+<p><strong>Real-Time Validation Feedback:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>if self.auth_mode == AuthMode::Register
+    &amp;&amp; !self.password_input.is_empty()
+    &amp;&amp; !self.confirm_password_input.is_empty()
+    &amp;&amp; self.password_input != self.confirm_password_input
+{
+    ui.add_space(10.0);
+    ui.colored_label(egui::Color32::YELLOW, "Passwords do not match");
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The feedback system provides immediate user guidance:</p>
+<ul>
+<li><strong>Real-Time Validation</strong>: Shows validation errors as users type</li>
+<li><strong>Color-Coded Feedback</strong>: Uses color to indicate validation status</li>
+<li><strong>Specific Error Messages</strong>: Provides specific, actionable error messages</li>
+<li><strong>Non-Intrusive Display</strong>: Shows errors without disrupting user workflow</li>
+<li><strong>Progressive Enhancement</strong>: Enhances form with real-time feedback</li>
+</ul>
+<p><strong>Error Display and User Communication:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>if let Some(error) = &amp;self.authentication_error {
+    ui.add_space(10.0);
+    ui.colored_label(egui::Color32::RED, error);
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The error display system provides clear error communication:</p>
+<ul>
+<li><strong>Prominent Error Display</strong>: Uses red color for clear error indication</li>
+<li><strong>Specific Error Messages</strong>: Shows specific error information to users</li>
+<li><strong>Consistent Positioning</strong>: Places errors in consistent, expected locations</li>
+<li><strong>User Guidance</strong>: Helps users understand and resolve authentication issues</li>
+<li><strong>Professional Appearance</strong>: Maintains professional appearance even during errors</li>
+</ul>
+<p><strong>System Status and Context Information:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>if let Some(ref user_manager) = self.user_manager {
+    let screen_height = ui.available_height();
+    ui.add_space(screen_height - 45.0);
+    ui.separator();
+    ui.small(format!("Registered users: {}", user_manager.get_user_count()));
+    ui.small(format!("Current time: {}", self.get_current_time()));
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The status system provides helpful context information:</p>
+<ul>
+<li><strong>User Count Display</strong>: Shows number of registered users for context</li>
+<li><strong>Time Display</strong>: Provides current time for user reference</li>
+<li><strong>Dynamic Positioning</strong>: Uses available height for optimal placement</li>
+<li><strong>Visual Separation</strong>: Uses separator for clear section distinction</li>
+<li><strong>Subtle Information</strong>: Uses small text for non-intrusive information display</li>
+</ul>
+<p><strong>Advanced UX Design Principles:</strong>
+The interface implements several sophisticated UX principles:</p>
+<p><strong>Progressive Disclosure:</strong></p>
+<ul>
+<li><strong>Mode-Specific Fields</strong>: Shows only relevant fields for current mode</li>
+<li><strong>Conditional Validation</strong>: Applies validation rules appropriate to context</li>
+<li><strong>Escalating Warnings</strong>: Provides increasingly detailed warnings over time</li>
+<li><strong>Context-Sensitive Help</strong>: Shows help information when most relevant</li>
+</ul>
+<p><strong>Accessibility and Usability:</strong></p>
+<ul>
+<li><strong>Clear Labels</strong>: All input fields have clear, descriptive labels</li>
+<li><strong>Keyboard Navigation</strong>: Full keyboard navigation support</li>
+<li><strong>Color Accessibility</strong>: Uses color coding with sufficient contrast</li>
+<li><strong>Screen Reader Support</strong>: Implements proper accessibility relationships</li>
+<li><strong>Consistent Interaction</strong>: Maintains consistent interaction patterns</li>
+</ul>
+<p><strong>Performance and Responsiveness:</strong></p>
+<ul>
+<li><strong>Efficient Rendering</strong>: Optimized rendering for smooth performance</li>
+<li><strong>Real-Time Updates</strong>: Immediate feedback for all user interactions</li>
+<li><strong>Resource Management</strong>: Efficient use of system resources</li>
+<li><strong>Battery Consideration</strong>: Optimized update frequency for battery life</li>
+<li><strong>Cross-Platform Performance</strong>: Consistent performance across platforms</li>
+</ul>
+<p>This comprehensive authentication interface demonstrates advanced GUI programming techniques while maintaining excellent user experience and security standards.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../snippets/snippet_17.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../snippets/snippet_17.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

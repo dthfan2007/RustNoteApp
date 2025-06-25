@@ -1,0 +1,413 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Snippet 6 - Rust Notes App</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            html.classList.remove('sidebar-visible');
+            html.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Rust Notes App</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="snippet-6-encrypting--decrypting-the-notes"><a class="header" href="#snippet-6-encrypting--decrypting-the-notes">Snippet 6: Encrypting &amp; Decrypting the Notes</a></h1>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn encrypt(&amp;self, data: &amp;[u8]) -&gt; Result&lt;Vec&lt;u8&gt;&gt; {
+    let cipher = self
+        .cipher
+        .as_ref()
+        .ok_or_else(|| anyhow!("Cipher not initialized"))?;
+    let nonce = ChaCha20Poly1305::generate_nonce(&amp;mut OsRng);
+    let ciphertext = cipher
+        .encrypt(&amp;nonce, data)
+        .map_err(|e| anyhow!("Encryption failed: {}", e))?;
+
+    let mut result = Vec::new();
+    result.extend_from_slice(&amp;nonce);
+    result.extend_from_slice(&amp;ciphertext);
+    Ok(result)
+}
+
+pub fn decrypt(&amp;self, data: &amp;[u8]) -&gt; Result&lt;Vec&lt;u8&gt;&gt; {
+    let cipher = self
+        .cipher
+        .as_ref()
+        .ok_or_else(|| anyhow!("Cipher not initialized"))?;
+
+    if data.len() &lt; 12 {
+        return Err(anyhow!("Invalid encrypted data"));
+    }
+
+    let (nonce_bytes, ciphertext) = data.split_at(12);
+    let nonce = Nonce::from_slice(nonce_bytes);
+    let plaintext = cipher
+        .decrypt(nonce, ciphertext)
+        .map_err(|e| anyhow!("Decryption failed: {}", e))?;
+    Ok(plaintext)
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="advanced-authenticated-encryption-system-with-chacha20poly1305"><a class="header" href="#advanced-authenticated-encryption-system-with-chacha20poly1305">Advanced Authenticated Encryption System with ChaCha20Poly1305</a></h2>
+<p>This code snippet implements the core cryptographic operations that protect all user data in the secure notes application. It utilizes ChaCha20Poly1305, a state-of-the-art authenticated encryption algorithm that provides both confidentiality and integrity protection. The implementation follows cryptographic best practices and provides robust security against various attack vectors.</p>
+<h3 id="comprehensive-cryptographic-analysis"><a class="header" href="#comprehensive-cryptographic-analysis">Comprehensive Cryptographic Analysis</a></h3>
+<p><strong>Encryption Function Architecture:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn encrypt(&amp;self, data: &amp;[u8]) -&gt; Result&lt;Vec&lt;u8&gt;&gt;
+<span class="boring">}</span></code></pre></pre>
+<p>This function serves as the primary data protection mechanism, transforming plaintext data into cryptographically secure ciphertext. The function signature demonstrates several important design decisions:</p>
+<ul>
+<li><strong>Immutable Self Reference</strong>: Uses <code>&amp;self</code> to ensure the encryption operation doesn't modify the crypto manager state</li>
+<li><strong>Byte Array Input</strong>: Accepts <code>&amp;[u8]</code> for maximum flexibility, allowing encryption of any binary data</li>
+<li><strong>Result Return Type</strong>: Provides comprehensive error handling with descriptive error messages</li>
+<li><strong>Vector Output</strong>: Returns <code>Vec&lt;u8&gt;</code> for efficient memory management of variable-length encrypted data</li>
+</ul>
+<p><strong>Cipher Validation and State Management:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let cipher = self.cipher.as_ref().ok_or_else(|| anyhow!("Cipher not initialized"))?;
+<span class="boring">}</span></code></pre></pre>
+<p>The function begins with critical state validation:</p>
+<ul>
+<li><strong>Initialization Checking</strong>: Ensures the cipher has been properly initialized before attempting encryption</li>
+<li><strong>Safe Unwrapping</strong>: Uses <code>ok_or_else()</code> to convert <code>Option</code> to <code>Result</code> with descriptive error</li>
+<li><strong>State Consistency</strong>: Prevents encryption attempts when the cryptographic system isn't ready</li>
+<li><strong>Error Propagation</strong>: Provides clear error messages for debugging and user feedback</li>
+</ul>
+<p><strong>Cryptographically Secure Nonce Generation:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let nonce = ChaCha20Poly1305::generate_nonce(&amp;mut OsRng);
+<span class="boring">}</span></code></pre></pre>
+<p>Nonce generation is critical for encryption security:</p>
+<ul>
+<li><strong>Unique Per Operation</strong>: Each encryption operation gets a completely unique nonce</li>
+<li><strong>Cryptographically Secure Randomness</strong>: Uses the operating system's cryptographically secure random number generator</li>
+<li><strong>Proper Size</strong>: ChaCha20Poly1305 requires exactly 12 bytes (96 bits) for the nonce</li>
+<li><strong>No Reuse</strong>: The random generation ensures nonces are never reused with the same key</li>
+<li><strong>Attack Prevention</strong>: Unique nonces prevent replay attacks and chosen-plaintext attacks</li>
+</ul>
+<p><strong>Authenticated Encryption Process:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let ciphertext = cipher.encrypt(&amp;nonce, data).map_err(|e| anyhow!("Encryption failed: {}", e))?;
+<span class="boring">}</span></code></pre></pre>
+<p>The core encryption operation provides multiple security guarantees:</p>
+<ul>
+<li><strong>Confidentiality</strong>: The plaintext is transformed into indistinguishable ciphertext</li>
+<li><strong>Authenticity</strong>: The algorithm generates an authentication tag that proves data integrity</li>
+<li><strong>Tamper Detection</strong>: Any modification to the ciphertext will be detected during decryption</li>
+<li><strong>Key Binding</strong>: The ciphertext can only be decrypted with the exact same key used for encryption</li>
+</ul>
+<p><strong>Data Format Construction:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let mut result = Vec::new();
+result.extend_from_slice(&amp;nonce);
+result.extend_from_slice(&amp;ciphertext);
+<span class="boring">}</span></code></pre></pre>
+<p>The function creates a standardized data format:</p>
+<ul>
+<li><strong>Nonce Prepending</strong>: Places the 12-byte nonce at the beginning of the output</li>
+<li><strong>Ciphertext Appending</strong>: Follows with the variable-length encrypted data and authentication tag</li>
+<li><strong>Self-Contained Format</strong>: The result contains everything needed for decryption</li>
+<li><strong>Efficient Memory Usage</strong>: Uses <code>extend_from_slice()</code> for optimal memory allocation</li>
+</ul>
+<p><strong>Decryption Function Architecture:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn decrypt(&amp;self, data: &amp;[u8]) -&gt; Result&lt;Vec&lt;u8&gt;&gt;
+<span class="boring">}</span></code></pre></pre>
+<p>The decryption function mirrors the encryption function's design principles:</p>
+<ul>
+<li><strong>Immutable Operations</strong>: Doesn't modify the crypto manager state during decryption</li>
+<li><strong>Flexible Input</strong>: Accepts any byte array that follows the expected format</li>
+<li><strong>Comprehensive Error Handling</strong>: Provides detailed error information for various failure modes</li>
+<li><strong>Memory Efficient</strong>: Returns only the decrypted plaintext without unnecessary allocations</li>
+</ul>
+<p><strong>Input Validation and Format Checking:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>if data.len() &lt; 12 {
+    return Err(anyhow!("Invalid encrypted data"));
+}
+<span class="boring">}</span></code></pre></pre>
+<p>The function performs critical input validation:</p>
+<ul>
+<li><strong>Minimum Length Checking</strong>: Ensures the input contains at least a 12-byte nonce</li>
+<li><strong>Format Validation</strong>: Prevents processing of malformed or truncated data</li>
+<li><strong>Early Error Detection</strong>: Fails fast on obviously invalid input</li>
+<li><strong>Security Protection</strong>: Prevents potential buffer underflow or panic conditions</li>
+</ul>
+<p><strong>Data Parsing and Component Extraction:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let (nonce_bytes, ciphertext) = data.split_at(12);
+let nonce = Nonce::from_slice(nonce_bytes);
+<span class="boring">}</span></code></pre></pre>
+<p>The parsing process carefully extracts encryption components:</p>
+<ul>
+<li><strong>Precise Splitting</strong>: Separates the 12-byte nonce from the remaining ciphertext</li>
+<li><strong>Type Conversion</strong>: Converts the byte slice to the proper <code>Nonce</code> type required by the algorithm</li>
+<li><strong>Memory Safety</strong>: Uses Rust's safe slicing operations to prevent buffer overflows</li>
+<li><strong>Format Consistency</strong>: Matches the exact format created by the encryption function</li>
+</ul>
+<p><strong>Authenticated Decryption Process:</strong></p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let plaintext = cipher.decrypt(nonce, ciphertext).map_err(|e| anyhow!("Decryption failed: {}", e))?;
+<span class="boring">}</span></code></pre></pre>
+<p>The decryption operation provides comprehensive security validation:</p>
+<ul>
+<li><strong>Authentication Verification</strong>: Validates the authentication tag before revealing any plaintext</li>
+<li><strong>Integrity Checking</strong>: Ensures the ciphertext hasn't been modified since encryption</li>
+<li><strong>Key Validation</strong>: Confirms the correct key is being used for decryption</li>
+<li><strong>Tamper Detection</strong>: Fails securely if any tampering is detected</li>
+</ul>
+<p><strong>ChaCha20Poly1305 Algorithm Benefits:</strong>
+This implementation leverages several advantages of the ChaCha20Poly1305 algorithm:</p>
+<p><strong>Performance Characteristics:</strong></p>
+<ul>
+<li><strong>Software Optimization</strong>: Designed for efficient implementation in software</li>
+<li><strong>Constant-Time Operations</strong>: Resistant to timing-based side-channel attacks</li>
+<li><strong>Parallel Processing</strong>: Can be optimized for multi-core processors</li>
+<li><strong>Low Latency</strong>: Suitable for real-time applications requiring fast encryption/decryption</li>
+</ul>
+<p><strong>Security Properties:</strong></p>
+<ul>
+<li><strong>Proven Security</strong>: Based on well-analyzed cryptographic primitives</li>
+<li><strong>Authenticated Encryption</strong>: Provides both confidentiality and authenticity in a single operation</li>
+<li><strong>Nonce Misuse Resistance</strong>: More forgiving of implementation errors than some alternatives</li>
+<li><strong>Long-Term Security</strong>: Designed to remain secure against future cryptographic advances</li>
+</ul>
+<p><strong>Implementation Robustness:</strong></p>
+<ul>
+<li><strong>Side-Channel Resistance</strong>: Designed to resist various side-channel attacks</li>
+<li><strong>Simple Interface</strong>: Reduces the likelihood of implementation errors</li>
+<li><strong>Standard Compliance</strong>: Follows established cryptographic standards and best practices</li>
+<li><strong>Interoperability</strong>: Compatible with other implementations of the same algorithm</li>
+</ul>
+<p><strong>Error Handling and Security:</strong>
+The implementation includes comprehensive error handling:</p>
+<ul>
+<li><strong>Descriptive Errors</strong>: Provides clear error messages for debugging without leaking sensitive information</li>
+<li><strong>Fail-Safe Behavior</strong>: Fails securely when errors occur, never partially decrypting data</li>
+<li><strong>State Protection</strong>: Ensures the crypto manager remains in a consistent state after errors</li>
+<li><strong>Attack Resistance</strong>: Error messages don't provide information useful to attackers</li>
+</ul>
+<p><strong>Memory Management and Performance:</strong>
+The functions are optimized for both security and performance:</p>
+<ul>
+<li><strong>Efficient Allocation</strong>: Minimizes memory allocations and copies</li>
+<li><strong>Secure Cleanup</strong>: Relies on Rust's ownership system for secure memory cleanup</li>
+<li><strong>Zero-Copy Operations</strong>: Uses slicing and references where possible to avoid unnecessary copying</li>
+<li><strong>Predictable Performance</strong>: Operations have consistent performance characteristics regardless of input</li>
+</ul>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../snippets/snippet_5.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../snippets/snippet_7.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../snippets/snippet_5.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../snippets/snippet_7.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>
