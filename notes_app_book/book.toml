@@ -5,4 +5,4 @@ src = "src"
 title = "Rust Notes App"
 
 [output.html]
-base-url = "/notes_app_book/book/"
+base-url = "../notes_app_book/book/"
