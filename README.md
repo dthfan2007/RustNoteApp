@@ -211,6 +211,14 @@ cargo build --release
 ./target/release/secure-notes-app
 ```
 
+Alternatively, you can also install the exe directly via cargo
+
+```shellscript
+cargo install rust_notes_app
+```
+
+This installs the .exe to `C:\Users\[Your Username]\.cargo\bin\rust_notes_app.exe`, on Windows.
+
 ### First Run
 
 1. **Launch Application**: Double-click the executable or run from terminal
