@@ -1,7 +1,9 @@
 // @Author: Matteo Cipriani
 // @Date:   04-06-2025 10:24:58
 // @Last Modified by:   Matteo Cipriani
-// @Last Modified time: 01-07-2025 09:12:29
+// @Last Modified time: 01-07-2025 11:20:24
+#![windows_subsystem = "windows"]
+
 //! # Secure Notes Application
 //!
 //! A secure, encrypted note-taking application built with eframe/egui.
@@ -205,6 +207,7 @@ fn load_icon() -> IconData {
 /// - GUI rendering is optimized for 60 FPS
 /// - Memory usage scales with the number of notes
 /// - Startup time includes key derivation (5-10 seconds for security)
+
 fn main() -> Result<(), eframe::Error> {
     // Configure the native window options
     let options = eframe::NativeOptions {
