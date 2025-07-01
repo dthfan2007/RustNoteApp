@@ -1,7 +1,12 @@
 [package]
-name = "secure-notes-app"
+name = "rust_notes_app"
 version = "0.1.0"
 edition = "2021"
+authors = ["Matteo Cipriani <2007.matteo.l.s@gmail.com>"]
+description = "A simple encrypted Notes App I developed as a project."
+license = "MIT"
+repository = "https://github.com/dthfan2007/RustNoteApp/"
+readme = "README.md"
 
 [dependencies]
 egui = "0.29"
