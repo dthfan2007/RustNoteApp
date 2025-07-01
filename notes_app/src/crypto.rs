@@ -1,7 +1,13 @@
 // @Author: Matteo Cipriani
 // @Date:   04-06-2025 10:29:20
 // @Last Modified by:   Matteo Cipriani
-// @Last Modified time: 25-06-2025 10:27:26
+// @Last Modified time: 01-07-2025 09:06:33
+//! # Cryptographic Module
+//!
+//! Provides secure encryption, decryption, and key management functionality.
+//! Uses ChaCha20Poly1305 for encryption and Argon2 for key derivation.
+//! Implements hardware fingerprinting for additional security.
+
 use anyhow::{anyhow, Result};
 use argon2::{password_hash::SaltString, Argon2, PasswordHash, PasswordHasher, PasswordVerifier};
 use chacha20poly1305::{
@@ -15,22 +21,50 @@ use std::env;
 use std::fs;
 use std::hash::{Hash, Hasher};
 
+/// Security metadata stored alongside encrypted data.
+///
+/// Contains version information, creation timestamp, and hardware fingerprint
+/// data used to verify that the encrypted data is being accessed from the
+/// same system where it was created.
 #[derive(Serialize, Deserialize)]
 struct SecurityMetadata {
+    /// Version of the security metadata format
     version: u32,
+    /// Unix timestamp when the metadata was created
     created_timestamp: u64,
+    /// Hash of the hardware fingerprint components
     hardware_fingerprint_hash: u64,
+    /// List of hardware components used for fingerprinting
     #[serde(default)] // This makes the field optional for backward compatibility
     hardware_components: Vec<String>,
 }
 
+/// Main cryptographic manager for the application.
+///
+/// Handles all cryptographic operations including:
+/// - Key derivation from passwords using Argon2
+/// - Encryption/decryption using ChaCha20Poly1305
+/// - Hardware fingerprinting for device binding
+/// - Security metadata management
+/// - Password verification and changes
 pub struct CryptoManager {
+    /// The encryption cipher instance
     cipher: Option<ChaCha20Poly1305>,
+    /// Path to the configuration directory
     config_path: std::path::PathBuf,
+    /// Security metadata for the current session
     security_metadata: Option<SecurityMetadata>,
 }
 
 impl CryptoManager {
+    /// Creates a new CryptoManager instance.
+    ///
+    /// Initializes the configuration directory path and creates it if it doesn't exist.
+    /// The cipher is not initialized until `initialize_for_user` is called.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - A new CryptoManager instance
     pub fn new() -> Self {
         let mut config_path = config_dir().unwrap_or_else(|| std::path::PathBuf::from("."));
         config_path.push("secure_notes");
@@ -46,6 +80,33 @@ impl CryptoManager {
         }
     }
 
+    /// Initializes the crypto manager for a specific user.
+    ///
+    /// This method performs several critical operations:
+    /// 1. Creates user-specific configuration directory
+    /// 2. Loads or creates security metadata with hardware fingerprinting
+    /// 3. Verifies password against stored hash (for existing users)
+    /// 4. Derives encryption key using Argon2
+    /// 5. Initializes the ChaCha20Poly1305 cipher
+    ///
+    /// The process is designed to be secure but may take several seconds due to
+    /// the intentionally expensive key derivation process.
+    ///
+    /// # Arguments
+    ///
+    /// * `user_id` - Unique identifier for the user
+    /// * `password` - User's password for key derivation
+    ///
+    /// # Returns
+    ///
+    /// * `Result<()>` - Ok if initialization succeeds, Err with details if it fails
+    ///
+    /// # Errors
+    ///
+    /// * Password verification fails for existing users
+    /// * Hardware fingerprint doesn't match (potential security breach)
+    /// * File system operations fail
+    /// * Key derivation fails
     pub fn initialize_for_user(&mut self, user_id: &str, password: &str) -> Result<()> {
         println!("Starting crypto initialization for user: {}", user_id);
         let start_time = std::time::Instant::now();
@@ -213,6 +274,23 @@ impl CryptoManager {
         Ok(())
     }
 
+    /// Generates a stable hardware fingerprint for device binding.
+    ///
+    /// Creates a fingerprint based on stable system characteristics that
+    /// should remain consistent across reboots but change if the software
+    /// is moved to a different system. Uses only relatively stable components
+    /// to avoid false positives from minor system changes.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<(u64, Vec<String>)>` - Tuple of (hash, components) if successful
+    ///
+    /// # Components Used
+    ///
+    /// * Username - Very stable
+    /// * Home directory - Usually stable
+    /// * OS and architecture - Very stable
+    /// * Computer name - Usually stable but can change
     fn generate_stable_hardware_fingerprint(&self) -> Result<(u64, Vec<String>)> {
         println!("Generating stable hardware fingerprint...");
 
@@ -258,6 +336,19 @@ impl CryptoManager {
         Ok((hash, components))
     }
 
+    /// Determines if hardware changes are critical enough to deny access.
+    ///
+    /// Only considers changes to username, OS, or architecture as critical,
+    /// as these should never change on the same physical machine.
+    ///
+    /// # Arguments
+    ///
+    /// * `stored` - Previously stored hardware components
+    /// * `current` - Current hardware components
+    ///
+    /// # Returns
+    ///
+    /// * `bool` - true if critical components changed, false otherwise
     fn is_critical_hardware_change(&self, stored: &[String], current: &[String]) -> bool {
         // Only consider it critical if the username or OS changed
         // These should never change on the same machine
@@ -275,7 +366,23 @@ impl CryptoManager {
         stored_critical != current_critical
     }
 
-    // Standard security key derivation - balanced security and performance
+    /// Derives a secure encryption key from a password using Argon2.
+    ///
+    /// Uses production-grade parameters that balance security and performance:
+    /// - Memory cost: 128 MB
+    /// - Iterations: 3
+    /// - Parallelism: 4 threads
+    ///
+    /// The process is intentionally expensive (5-10 seconds) to make
+    /// brute force attacks impractical.
+    ///
+    /// # Arguments
+    ///
+    /// * `password` - The user's password
+    ///
+    /// # Returns
+    ///
+    /// * `chacha20poly1305::Key` - 32-byte encryption key
     fn derive_secure_key(&self, password: &str) -> chacha20poly1305::Key {
         println!("Using standard security key derivation...");
 
@@ -300,6 +407,15 @@ impl CryptoManager {
         key.into()
     }
 
+    /// Generates a deterministic salt based on hardware fingerprint.
+    ///
+    /// Creates a 32-byte salt that is consistent for the same hardware
+    /// but different across different systems. This adds an additional
+    /// layer of hardware binding to the encryption.
+    ///
+    /// # Returns
+    ///
+    /// * `[u8; 32]` - 32-byte salt array
     fn generate_hardware_salt(&self) -> [u8; 32] {
         // Create a deterministic salt based on hardware fingerprint
         if let Ok((hardware_hash, _)) = self.generate_stable_hardware_fingerprint() {
@@ -323,6 +439,18 @@ impl CryptoManager {
         }
     }
 
+    /// Sets secure file permissions on Unix systems.
+    ///
+    /// Sets file permissions to 0o600 (read/write for owner only) on Unix systems.
+    /// On other systems, this is a no-op.
+    ///
+    /// # Arguments
+    ///
+    /// * `_file_path` - Path to the file to secure
+    ///
+    /// # Returns
+    ///
+    /// * `Result<()>` - Ok if successful, Err if permission setting failed
     fn secure_file_permissions(&self, _file_path: &std::path::Path) -> Result<()> {
         #[cfg(unix)]
         {
@@ -334,6 +462,23 @@ impl CryptoManager {
         Ok(())
     }
 
+    /// Encrypts data using ChaCha20Poly1305.
+    ///
+    /// Generates a random nonce and encrypts the data, prepending the nonce
+    /// to the ciphertext for later decryption.
+    ///
+    /// # Arguments
+    ///
+    /// * `data` - The plaintext data to encrypt
+    ///
+    /// # Returns
+    ///
+    /// * `Result<Vec<u8>>` - Encrypted data with nonce prepended, or error
+    ///
+    /// # Errors
+    ///
+    /// * Cipher not initialized (call `initialize_for_user` first)
+    /// * Encryption operation fails
     pub fn encrypt(&self, data: &[u8]) -> Result<Vec<u8>> {
         let cipher = self
             .cipher
@@ -350,6 +495,24 @@ impl CryptoManager {
         Ok(result)
     }
 
+    /// Decrypts data using ChaCha20Poly1305.
+    ///
+    /// Extracts the nonce from the beginning of the data and decrypts
+    /// the remaining ciphertext.
+    ///
+    /// # Arguments
+    ///
+    /// * `data` - The encrypted data with nonce prepended
+    ///
+    /// # Returns
+    ///
+    /// * `Result<Vec<u8>>` - Decrypted plaintext data, or error
+    ///
+    /// # Errors
+    ///
+    /// * Cipher not initialized
+    /// * Invalid data format (too short or corrupted)
+    /// * Decryption operation fails (wrong key, tampered data, etc.)
     pub fn decrypt(&self, data: &[u8]) -> Result<Vec<u8>> {
         let cipher = self
             .cipher
@@ -368,6 +531,15 @@ impl CryptoManager {
         Ok(plaintext)
     }
 
+    /// Performs a security audit of the current session.
+    ///
+    /// Checks for potential security issues such as hardware fingerprint
+    /// changes that might indicate the data is being accessed from a
+    /// different system.
+    ///
+    /// # Returns
+    ///
+    /// * `Result<Vec<String>>` - List of security warnings, or error
     pub fn security_audit(&self) -> Result<Vec<String>> {
         let mut warnings = Vec::new();
 
@@ -392,6 +564,14 @@ impl CryptoManager {
         Ok(warnings)
     }
 
+    /// Gets detailed security information for display.
+    ///
+    /// Returns a formatted string containing security configuration details
+    /// including encryption parameters, hardware binding status, and metadata.
+    ///
+    /// # Returns
+    ///
+    /// * `Option<String>` - Formatted security information, or None if not available
     pub fn get_security_info(&self) -> Option<String> {
         self.security_metadata.as_ref().map(|metadata| {
             let components_str = if metadata.hardware_components.is_empty() {
@@ -411,6 +591,26 @@ impl CryptoManager {
         })
     }
 
+    /// Changes the user's password and re-initializes encryption.
+    ///
+    /// Verifies the old password, generates a new password hash, saves it,
+    /// and re-initializes the crypto manager with the new password.
+    ///
+    /// # Arguments
+    ///
+    /// * `old_password` - Current password for verification
+    /// * `new_password` - New password to set
+    /// * `user_id` - User ID for file operations
+    ///
+    /// # Returns
+    ///
+    /// * `Result<()>` - Ok if successful, Err with details if failed
+    ///
+    /// # Errors
+    ///
+    /// * Old password verification fails
+    /// * File operations fail
+    /// * Re-initialization with new password fails
     pub fn change_password(
         &mut self,
         old_password: &str,
@@ -452,6 +652,19 @@ impl CryptoManager {
         Ok(())
     }
 
+    /// Deletes all cryptographic data for a user.
+    ///
+    /// Removes the user's entire cryptographic configuration directory,
+    /// including password hashes, security metadata, and any other
+    /// crypto-related files.
+    ///
+    /// # Arguments
+    ///
+    /// * `user_id` - User ID whose crypto data should be deleted
+    ///
+    /// # Returns
+    ///
+    /// * `Result<()>` - Ok if successful, Err if deletion failed
     pub fn delete_user_crypto_data(&self, user_id: &str) -> Result<()> {
         let user_config_path = self.config_path.join("users").join(user_id);
 

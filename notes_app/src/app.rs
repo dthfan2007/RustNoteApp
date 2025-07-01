@@ -1,7 +1,11 @@
 // @Author: Matteo Cipriani
-// @Date:   20-06-2025 08:00:00
+// @Date:   20-06-2025 08:08:29
 // @Last Modified by:   Matteo Cipriani
-// @Last Modified time: 24-06-2025 11:37:55
+// @Last Modified time: 01-07-2025 09:05:13
+//! # Application Module
+//!
+//! Main application state and logic for the Secure Notes application.
+//! Handles authentication, note management, UI state, and application lifecycle.
 
 use crate::auth::{AuthMode, AuthResult};
 use crate::crypto::CryptoManager;
@@ -15,62 +19,115 @@ use std::collections::HashMap;
 use std::sync::mpsc;
 use std::thread;
 
+/// Time display format options for the UI.
 #[derive(Clone, Copy, PartialEq)]
 pub enum TimeFormat {
-    Relative, // "2 hours ago"
-    Absolute, // "15.12.2024 14:30"
+    /// Show relative time like "2 hours ago"
+    Relative,
+    /// Show absolute time like "15.12.2024 14:30"
+    Absolute,
 }
 
+/// Main application state structure.
+///
+/// Contains all the state needed for the secure notes application including
+/// user authentication, note storage, UI state, and various dialog states.
 pub struct NotesApp {
+    // Core data
+    /// Map of note IDs to Note objects
     pub notes: HashMap<String, Note>,
+    /// Currently selected note ID for editing
     pub selected_note_id: Option<String>,
+    /// Cryptographic manager for encryption/decryption
     pub crypto_manager: Option<CryptoManager>,
+    /// Storage manager for file operations
     pub storage_manager: StorageManager,
+    /// User management system
     pub user_manager: Option<UserManager>,
+    /// Currently authenticated user
     pub current_user: Option<User>,
 
-    // Authentication UI
+    // Authentication UI state
+    /// Username input field content
     pub username_input: String,
+    /// Password input field content
     pub password_input: String,
+    /// Confirm password input field content
     pub confirm_password_input: String,
+    /// Whether user is currently authenticated
     pub is_authenticated: bool,
+    /// Whether to show the authentication dialog
     pub show_auth_dialog: bool,
+    /// Current authentication mode (Login/Register)
     pub auth_mode: AuthMode,
+    /// Current authentication error message
     pub authentication_error: Option<String>,
+    /// Whether authentication is in progress
     pub is_authenticating: bool,
+    /// Channel receiver for authentication results
     pub auth_receiver: Option<mpsc::Receiver<AuthResult>>,
+    /// Start time of current authentication attempt
     pub auth_start_time: Option<std::time::Instant>,
 
-    // Note management
+    // Note management state
+    /// Input field for new note title
     pub new_note_title: String,
+    /// Last time notes were saved
     pub last_save_time: std::time::Instant,
+    /// Delay before auto-saving
     pub auto_save_delay: std::time::Duration,
+    /// Whether to show the new note dialog
     pub show_new_note_dialog: bool,
 
     // UI state
+    /// Whether to show the security information panel
     pub show_security_panel: bool,
+    /// List of current security warnings
     pub security_warnings: Vec<String>,
+    /// Current time display format
     pub show_time_format: TimeFormat,
 
-    // Context menu
+    // Context menu state
+    /// Note ID for which context menu is shown
     pub context_menu_note_id: Option<String>,
+    /// Whether context menu is visible
     pub show_context_menu: bool,
+    /// Position of the context menu
     pub context_menu_pos: egui::Pos2,
 
-    // User settings
+    // User settings state
+    /// Whether to show user settings dialog
     pub show_user_settings: bool,
+    /// Whether to show change password dialog
     pub show_change_password_dialog: bool,
+    /// Whether to show delete account dialog
     pub show_delete_account_dialog: bool,
+    /// Old password input for password change
     pub old_password_input: String,
+    /// New password input for password change
     pub new_password_input: String,
+    /// Confirm new password input for password change
     pub confirm_new_password_input: String,
+    /// Confirmation input for account deletion
     pub delete_confirmation_input: String,
 
+    // Status and messaging
+    /// Current status message to display
     pub status_message: Option<String>,
+    /// Time when status message was set
     pub status_message_time: Option<std::time::Instant>,
 }
 
 impl NotesApp {
+    /// Creates a new instance of the NotesApp.
+    ///
+    /// Initializes all state with default values and attempts to create
+    /// a UserManager. If UserManager creation fails, the app will still
+    /// function but without user management capabilities.
+    ///
+    /// # Returns
+    ///
+    /// * `Self` - A new NotesApp instance
     pub fn new() -> Self {
         let user_manager = UserManager::new().ok();
 
@@ -119,6 +176,17 @@ impl NotesApp {
         }
     }
 
+    /// Starts the authentication process in a background thread.
+    ///
+    /// This method spawns a background thread to handle the potentially
+    /// time-consuming authentication process (especially key derivation)
+    /// without blocking the UI. Results are communicated back via a channel.
+    ///
+    /// # Arguments
+    ///
+    /// * `username` - The username to authenticate
+    /// * `password` - The password to authenticate with
+    /// * `is_registration` - Whether this is a registration (true) or login (false)
     pub fn start_authentication(
         &mut self,
         username: String,
@@ -213,6 +281,11 @@ impl NotesApp {
         });
     }
 
+    /// Checks for authentication results from the background thread.
+    ///
+    /// This method should be called regularly (e.g., in the update loop)
+    /// to check if the background authentication process has completed
+    /// and handle the results appropriately.
     pub fn check_authentication_result(&mut self) {
         if let Some(receiver) = &self.auth_receiver {
             match receiver.try_recv() {
@@ -266,6 +339,11 @@ impl NotesApp {
         }
     }
 
+    /// Loads notes from storage for the current user.
+    ///
+    /// Attempts to load encrypted notes from the user's storage directory.
+    /// If loading fails, an error is logged but the application continues
+    /// with an empty note set.
     pub fn load_notes(&mut self) {
         if let (Some(ref crypto_manager), Some(ref user)) =
             (&self.crypto_manager, &self.current_user)
@@ -289,6 +367,10 @@ impl NotesApp {
         }
     }
 
+    /// Saves all notes to encrypted storage.
+    ///
+    /// Encrypts and saves all current notes to the user's storage directory.
+    /// If saving fails, an error is logged but the application continues.
     pub fn save_notes(&self) {
         if let (Some(ref crypto_manager), Some(ref user)) =
             (&self.crypto_manager, &self.current_user)
@@ -302,6 +384,14 @@ impl NotesApp {
         }
     }
 
+    /// Creates a new note with the given title.
+    ///
+    /// Creates a new note, adds it to the notes collection, selects it
+    /// for editing, and saves the updated notes to storage.
+    ///
+    /// # Arguments
+    ///
+    /// * `title` - The title for the new note. If empty, defaults to "Untitled Note"
     pub fn create_new_note(&mut self, title: String) {
         let final_title = if title.trim().is_empty() {
             "Untitled Note".to_string()
@@ -316,6 +406,14 @@ impl NotesApp {
         self.save_notes();
     }
 
+    /// Deletes a note by its ID.
+    ///
+    /// Removes the note from the collection, deselects it if it was selected,
+    /// and saves the updated notes to storage.
+    ///
+    /// # Arguments
+    ///
+    /// * `note_id` - The ID of the note to delete
     pub fn delete_note(&mut self, note_id: &str) {
         if let Some(note) = self.notes.get(note_id) {
             println!("Deleting note: {}", note.title);
@@ -330,6 +428,10 @@ impl NotesApp {
         self.save_notes();
     }
 
+    /// Performs auto-save if enough time has elapsed since the last save.
+    ///
+    /// Checks if the auto-save delay has passed and saves notes if needed.
+    /// This helps prevent data loss without constantly writing to disk.
     pub fn auto_save_if_needed(&mut self) {
         if self.last_save_time.elapsed() >= self.auto_save_delay {
             self.save_notes();
@@ -337,11 +439,21 @@ impl NotesApp {
         }
     }
 
+    /// Gets the current time formatted for display in Swiss timezone.
+    ///
+    /// # Returns
+    ///
+    /// * `String` - Current time in "DD.MM.YYYY HH:MM:SS" format
     pub fn get_current_time(&self) -> String {
         let now = Utc::now().with_timezone(&Zurich);
         now.format("%d.%m.%Y %H:%M:%S").to_string()
     }
 
+    /// Logs out the current user and resets application state.
+    ///
+    /// Clears all user-specific data, resets UI state, and returns
+    /// to the authentication dialog. This ensures no sensitive data
+    /// remains in memory after logout.
     pub fn logout(&mut self) {
         println!("User logging out");
         self.is_authenticated = false;
@@ -367,6 +479,10 @@ impl NotesApp {
         self.delete_confirmation_input.clear();
     }
 
+    /// Migrates legacy data from old storage format if needed.
+    ///
+    /// Checks for notes stored in the old format (before user-specific storage)
+    /// and migrates them to the current user's storage directory.
     pub fn migrate_legacy_data_if_needed(&mut self) {
         if let (Some(ref user), Some(ref crypto_manager)) =
             (&self.current_user, &self.crypto_manager)
@@ -380,6 +496,14 @@ impl NotesApp {
         }
     }
 
+    /// Exports a note to a text file.
+    ///
+    /// Opens a file dialog for the user to choose where to save the note,
+    /// then writes the note content along with metadata to the selected file.
+    ///
+    /// # Arguments
+    ///
+    /// * `note_id` - The ID of the note to export
     pub fn export_note_to_file(&self, note_id: &str) {
         if let Some(note) = self.notes.get(note_id) {
             // Create default filename from note title
@@ -423,6 +547,16 @@ impl NotesApp {
         }
     }
 
+    /// Writes a note to a file with metadata header.
+    ///
+    /// # Arguments
+    ///
+    /// * `note` - The note to write
+    /// * `path` - The file path to write to
+    ///
+    /// # Returns
+    ///
+    /// * `Result<(), std::io::Error>` - Ok if successful, Err if file operation failed
     fn write_note_to_file(
         &self,
         note: &Note,
@@ -446,6 +580,19 @@ impl NotesApp {
 }
 
 impl eframe::App for NotesApp {
+    /// Main update loop for the application.
+    ///
+    /// This method is called by eframe on every frame and handles:
+    /// - Authentication result checking
+    /// - Keyboard shortcuts
+    /// - UI rendering
+    /// - Auto-save functionality
+    /// - Status message management
+    ///
+    /// # Arguments
+    ///
+    /// * `ctx` - The egui context
+    /// * `_frame` - The eframe frame (unused)
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
         // Check for authentication results
         self.check_authentication_result();
@@ -478,7 +625,7 @@ impl eframe::App for NotesApp {
                     }
                 }
 
-                // Ctrl+T for switching between modes
+                // Ctrl+T for switching between time display modes
                 if i.modifiers.ctrl && i.key_pressed(egui::Key::T) {
                     self.show_time_format = match self.show_time_format {
                         TimeFormat::Relative => {

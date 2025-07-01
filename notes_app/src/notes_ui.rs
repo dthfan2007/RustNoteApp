@@ -1,12 +1,31 @@
 // @Author: Matteo Cipriani
-// @Date:   20-06-2025 08:00:00
+// @Date:   20-06-2025 08:08:57
 // @Last Modified by:   Matteo Cipriani
-// @Last Modified time: 24-06-2025 16:35:19
+// @Last Modified time: 01-07-2025 09:06:57
+//! # Notes UI Module
+//!
+//! Handles the user interface for note management including the sidebar,
+//! main content area, context menus, and various dialogs.
 
 use crate::app::{NotesApp, TimeFormat};
 use eframe::egui;
 
 impl NotesApp {
+    /// Renders the notes sidebar with user info, controls, and note list.
+    ///
+    /// The sidebar contains:
+    /// - Header with username and logout button
+    /// - Action buttons (New Note, Settings)
+    /// - Time format toggle
+    /// - Scrollable list of notes sorted by modification time
+    /// - Security information and warnings at the bottom
+    ///
+    /// Notes are displayed with title, modification time, and selection state.
+    /// Right-clicking a note opens a context menu with additional options.
+    ///
+    /// # Arguments
+    ///
+    /// * `ctx` - The egui context for rendering
     pub fn render_notes_sidebar(&mut self, ctx: &egui::Context) {
         egui::SidePanel::left("notes_list").show(ctx, |ui| {
             // Header with user info - Fix borrowing issue
@@ -201,6 +220,20 @@ impl NotesApp {
         self.render_context_menu(ctx);
     }
 
+    /// Renders the context menu for note operations.
+    ///
+    /// The context menu appears when right-clicking on a note and provides
+    /// options for:
+    /// - Exporting the note to a file
+    /// - Deleting the note
+    /// - Canceling the menu
+    ///
+    /// The menu automatically closes when clicking elsewhere or after
+    /// selecting an action.
+    ///
+    /// # Arguments
+    ///
+    /// * `ctx` - The egui context for rendering
     pub fn render_context_menu(&mut self, ctx: &egui::Context) {
         if !self.show_context_menu {
             return;
@@ -267,6 +300,20 @@ impl NotesApp {
         }
     }
 
+    /// Renders the main content area for note editing.
+    ///
+    /// The main content area displays:
+    /// - Status messages at the top (if any)
+    /// - Note header with title, timestamps, and export button
+    /// - Large text editor for note content
+    /// - Welcome message when no note is selected
+    ///
+    /// The text editor automatically updates the note's modification time
+    /// when content changes and triggers auto-save functionality.
+    ///
+    /// # Arguments
+    ///
+    /// * `ctx` - The egui context for rendering
     pub fn render_main_content(&mut self, ctx: &egui::Context) {
         egui::CentralPanel::default().show(ctx, |ui| {
             // Show status message at the top if present
@@ -357,6 +404,19 @@ impl NotesApp {
         });
     }
 
+    /// Renders the new note creation dialog.
+    ///
+    /// A modal dialog that allows users to enter a title for a new note.
+    /// Features:
+    /// - Text input field with placeholder text
+    /// - Auto-focus on the input field
+    /// - Enter key to create the note
+    /// - Create and Cancel buttons
+    /// - Automatic dialog closure after creation
+    ///
+    /// # Arguments
+    ///
+    /// * `ctx` - The egui context for rendering
     pub fn render_new_note_dialog(&mut self, ctx: &egui::Context) {
         if !self.show_new_note_dialog {
             return;
@@ -425,6 +485,20 @@ impl NotesApp {
         }
     }
 
+    /// Renders the security information panel.
+    ///
+    /// A window that displays detailed security information including:
+    /// - Cryptographic configuration details
+    /// - User account information
+    /// - Security audit results and warnings
+    /// - Hardware fingerprint status
+    /// - Current local time
+    ///
+    /// Users can run security audits to check for potential issues.
+    ///
+    /// # Arguments
+    ///
+    /// * `ctx` - The egui context for rendering
     pub fn render_security_panel(&mut self, ctx: &egui::Context) {
         if !self.show_security_panel {
             return;

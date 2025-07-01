@@ -1,25 +1,54 @@
 // @Author: Matteo Cipriani
-// @Date:   20-06-2025 08:00:00
+// @Date:   20-06-2025 08:08:38
 // @Last Modified by:   Matteo Cipriani
-// @Last Modified time: 25-06-2025 10:28:20
+// @Last Modified time: 01-07-2025 09:04:55
+//! # Authentication Module
+//!
+//! Handles user authentication UI and related functionality including
+//! login, registration, and authentication state management.
 
 use crate::app::NotesApp;
 use crate::crypto::CryptoManager;
 use crate::user::User;
 use eframe::egui;
 
+/// Represents the current authentication mode in the UI.
 #[derive(Clone, Copy, PartialEq)]
 pub enum AuthMode {
+    /// User is attempting to log in with existing credentials
     Login,
+    /// User is creating a new account
     Register,
 }
 
+/// Result of an authentication attempt.
+///
+/// Contains either successful authentication data (crypto manager and user)
+/// or an error message describing what went wrong.
 pub enum AuthResult {
+    /// Authentication succeeded with crypto manager and user data
     Success(CryptoManager, User),
+    /// Authentication failed with error message
     Error(String),
 }
 
 impl NotesApp {
+    /// Renders the authentication dialog UI.
+    ///
+    /// This method displays the login/registration form including:
+    /// - Mode selection (Login/Register)
+    /// - Username and password input fields
+    /// - Confirm password field for registration
+    /// - Submit button with validation
+    /// - Error messages and loading states
+    /// - User count and current time display
+    ///
+    /// The dialog handles keyboard shortcuts (Enter to submit) and
+    /// provides real-time validation feedback.
+    ///
+    /// # Arguments
+    ///
+    /// * `ctx` - The egui context for rendering UI elements
     pub fn render_auth_dialog(&mut self, ctx: &egui::Context) {
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.vertical_centered(|ui| {
@@ -28,10 +57,11 @@ impl NotesApp {
                 ui.add_space(20.0);
 
                 if self.is_authenticating {
+                    // Show loading state with progress information
                     ui.label("Processing... Please wait");
                     ui.spinner();
 
-                    // Show elapsed time
+                    // Show elapsed time for user feedback
                     if let Some(start_time) = self.auth_start_time {
                         let elapsed = start_time.elapsed().as_secs_f64();
                         ui.label(format!("Elapsed: {:.1}s", elapsed));
@@ -44,6 +74,7 @@ impl NotesApp {
                             );
                         }
 
+                        // Show error state and cancel option for very long waits
                         if elapsed > 30.0 {
                             ui.colored_label(
                                 egui::Color32::RED,
@@ -64,7 +95,7 @@ impl NotesApp {
 
                     // Mode selection - calculate actual widget width and center it
                     ui.horizontal(|ui| {
-                        // Calculate actual text widths
+                        // Calculate actual text widths for proper centering
                         let login_text_size = ui
                             .fonts(|f| {
                                 f.layout_no_wrap(
@@ -97,7 +128,7 @@ impl NotesApp {
 
                     ui.add_space(20.0);
 
-                    // Username input
+                    // Username input field
                     ui.label("Username:");
                     ui.add(
                         egui::TextEdit::singleline(&mut self.username_input).desired_width(200.0),
@@ -105,7 +136,7 @@ impl NotesApp {
 
                     ui.add_space(10.0);
 
-                    // Password input
+                    // Password input field
                     ui.label("Password:");
                     let password_response = ui.add(
                         egui::TextEdit::singleline(&mut self.password_input)
@@ -113,7 +144,7 @@ impl NotesApp {
                             .desired_width(200.0),
                     );
 
-                    // Confirm password for registration
+                    // Confirm password for registration mode
                     if self.auth_mode == AuthMode::Register {
                         ui.add_space(10.0);
                         ui.label("Confirm Password:");
@@ -126,7 +157,7 @@ impl NotesApp {
 
                     ui.add_space(20.0);
 
-                    // Submit button
+                    // Submit button with validation
                     let button_text = match self.auth_mode {
                         AuthMode::Login => "Login",
                         AuthMode::Register => "Register",
@@ -138,6 +169,7 @@ impl NotesApp {
                         && (self.auth_mode == AuthMode::Login
                             || self.password_input == self.confirm_password_input);
 
+                    // Handle button click or Enter key press
                     if ui
                         .add_enabled(can_submit, egui::Button::new(button_text))
                         .clicked()
@@ -145,6 +177,7 @@ impl NotesApp {
                             && ui.input(|i| i.key_pressed(egui::Key::Enter))
                             && can_submit)
                     {
+                        // Validate input before starting authentication
                         if self.auth_mode == AuthMode::Register
                             && self.password_input != self.confirm_password_input
                         {
@@ -160,7 +193,7 @@ impl NotesApp {
                         }
                     }
 
-                    // Show validation errors
+                    // Show real-time validation errors
                     if self.auth_mode == AuthMode::Register
                         && !self.password_input.is_empty()
                         && !self.confirm_password_input.is_empty()
@@ -178,13 +211,13 @@ impl NotesApp {
                         );
                     }
 
-                    // Show authentication error
+                    // Show authentication error messages
                     if let Some(error) = &self.authentication_error {
                         ui.add_space(10.0);
                         ui.colored_label(egui::Color32::RED, error);
                     }
 
-                    // Show user count for context
+                    // Show user count and current time for context
                     if let Some(ref user_manager) = self.user_manager {
                         let screen_height = ui.available_height();
                         ui.add_space(screen_height - 45.0);
